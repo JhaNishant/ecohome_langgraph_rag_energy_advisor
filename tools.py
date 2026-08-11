@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import os
+import re
 import shutil
 from datetime import datetime, timedelta
 from functools import lru_cache
@@ -20,6 +21,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from models.energy import DEFAULT_DB_PATH, DatabaseManager, berlin_price_for_hour
+from models.preferences import load_user_preferences
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -332,6 +334,128 @@ def get_recent_energy_summary(hours: int = 24) -> dict[str, Any]:
         return _error(f"Failed to get recent energy summary: {exc}")
 
 
+@tool
+def get_user_preferences() -> dict[str, Any]:
+    """Return the editable household preferences used for personalized recommendations."""
+    try:
+        return load_user_preferences()
+    except Exception as exc:
+        return _error(f"Failed to load user preferences: {exc}")
+
+
+def _hours_to_window(hours: list[int]) -> str:
+    if not hours:
+        return "No suitable window"
+    return f"{min(hours):02d}:00–{max(hours) + 1:02d}:00"
+
+
+def build_tomorrow_plan(
+    weather: dict[str, Any], prices: dict[str, Any], preferences: dict[str, Any]
+) -> dict[str, Any]:
+    """Create a transparent, deterministic day plan from weather, pricing, and preferences."""
+    tomorrow = (datetime.now(BERLIN_TIMEZONE).date() + timedelta(days=1)).isoformat()
+    hourly_weather = [row for row in weather.get("hourly", []) if str(row.get("time", "")).startswith(tomorrow)]
+    if not hourly_weather:
+        hourly_weather = weather.get("hourly", [])[:24]
+
+    solar_hours = [
+        int(row["hour"])
+        for row in hourly_weather
+        if float(row.get("solar_irradiance_w_m2") or 0) >= 250
+    ]
+    price_rows = prices.get("hourly_rates", [])
+    off_peak_hours = [int(row["hour"]) for row in price_rows if row.get("period") == "off_peak"]
+    peak_hours = [int(row["hour"]) for row in price_rows if row.get("period") == "peak"]
+    solar_window = _hours_to_window(solar_hours)
+    off_peak_window = _hours_to_window(off_peak_hours)
+    peak_window = _hours_to_window(peak_hours)
+
+    ev = preferences["ev"]
+    comfort = preferences["comfort"]
+    battery = preferences["battery"]
+    priorities = preferences["priorities"]
+    solar_first = bool(priorities.get("maximize_solar")) and bool(ev.get("allow_midday_charging")) and bool(solar_hours)
+    ev_window = solar_window if solar_first else off_peak_window
+    ev_reason = "uses forecast rooftop solar" if solar_first else "uses the cheapest grid period before departure"
+    estimated_solar_kwh = round(min(float(ev["target_charge_kwh"]), max(0, len(solar_hours) * 1.5)), 1)
+    shifted_kwh = round(min(float(ev["target_charge_kwh"]), 6.0), 1)
+    carbon = calculate_carbon_impact.invoke(
+        {"shifted_energy_kwh": shifted_kwh, "solar_energy_kwh": estimated_solar_kwh}
+    )
+    source = weather.get("data_source", "unknown")
+    confidence = "high" if source == "Open Meteo" and len(solar_hours) >= 3 else "medium"
+    if weather.get("fallback"):
+        confidence = "limited"
+
+    return {
+        "date": tomorrow,
+        "location": preferences["location"],
+        "confidence": confidence,
+        "data_inputs": {
+            "weather_source": source,
+            "solar_window": solar_window,
+            "off_peak_window": off_peak_window,
+            "peak_window": peak_window,
+            "quiet_hours": comfort["quiet_hours"],
+        },
+        "plan": [
+            {
+                "device": "EV charger",
+                "window": ev_window,
+                "action": f"Charge up to {ev['target_charge_kwh']} kWh before {ev['departure_time']}",
+                "why": ev_reason,
+            },
+            {
+                "device": "Flexible appliances",
+                "window": solar_window,
+                "action": "Run dishwasher, washing, or water heating during this window",
+                "why": "matches the strongest forecast solar period while staying outside quiet hours",
+            },
+            {
+                "device": "HVAC",
+                "window": solar_window,
+                "action": f"Preheat or precool within {comfort['minimum_temperature_c']}–{comfort['maximum_temperature_c']}°C",
+                "why": "uses lower cost daytime energy without giving up comfort",
+            },
+            {
+                "device": "Home battery",
+                "window": peak_window,
+                "action": f"Keep {battery['reserve_percent']}% in reserve and use stored energy during peak hours",
+                "why": "reduces exposure to the highest grid price period",
+            },
+        ],
+        "estimated_impact": {
+            "shifted_energy_kwh": shifted_kwh,
+            "estimated_solar_energy_kwh": estimated_solar_kwh,
+            "carbon": carbon,
+        },
+        "assumptions": [
+            "Solar energy is estimated from forecast radiation, not a site specific panel model.",
+            "Carbon impact uses a transparent 350 g CO2e per kWh grid estimate.",
+            "The plan recommends schedules only and does not operate devices.",
+        ],
+    }
+
+
+@tool
+def get_personalized_tomorrow_plan(location: str = DEFAULT_LOCATION) -> dict[str, Any]:
+    """Create an explainable Berlin energy plan using weather, prices, and saved preferences."""
+    try:
+        preferences = load_user_preferences()
+        if location and location != DEFAULT_LOCATION:
+            preferences["location"] = location
+        tomorrow = (datetime.now(BERLIN_TIMEZONE).date() + timedelta(days=1)).isoformat()
+        weather = get_weather_forecast.invoke({"location": preferences["location"], "days": 3})
+        prices = get_electricity_prices.invoke({"date": tomorrow})
+        if weather.get("error"):
+            return weather
+        if prices.get("error"):
+            return prices
+        return build_tomorrow_plan(weather, prices, preferences)
+    except Exception as exc:
+        return _error(f"Failed to create a personalized tomorrow plan: {exc}")
+
+
 def _embedding_client() -> OpenAIEmbeddings:
     api_key = os.getenv("VOCAREUM_API_KEY") or os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -376,6 +500,14 @@ def build_energy_tip_vectorstore(rebuild: bool = False) -> Chroma:
     )
 
 
+def _keyword_overlap(query: str, content: str) -> float:
+    query_terms = {term for term in re.findall(r"[a-zA-Z]{3,}", query.lower())}
+    content_terms = set(re.findall(r"[a-zA-Z]{3,}", content.lower()))
+    if not query_terms:
+        return 0.0
+    return round(len(query_terms & content_terms) / len(query_terms), 3)
+
+
 @tool
 def search_energy_tips(query: str, max_results: int = 5) -> dict[str, Any]:
     """Search EcoHome's energy saving knowledge base and return sourced tips."""
@@ -385,18 +517,29 @@ def search_energy_tips(query: str, max_results: int = 5) -> dict[str, Any]:
         return _error("max_results must be between 1 and 10")
     try:
         vectorstore = build_energy_tip_vectorstore()
-        documents = vectorstore.similarity_search(query, k=max_results)
+        candidates = vectorstore.similarity_search_with_relevance_scores(query, k=max_results * 2)
+        ranked = []
+        for document, semantic_score in candidates:
+            keyword_score = _keyword_overlap(query, document.page_content)
+            hybrid_score = round((0.75 * max(0.0, semantic_score)) + (0.25 * keyword_score), 3)
+            ranked.append((document, max(0.0, semantic_score), keyword_score, hybrid_score))
+        ranked.sort(key=lambda item: item[3], reverse=True)
+        documents = ranked[:max_results]
         return {
             "query": query,
             "total_results": len(documents),
+            "retrieval_method": "hybrid semantic search with keyword re ranking",
             "tips": [
                 {
                     "rank": index,
                     "content": document.page_content,
                     "source": document.metadata.get("source", "unknown"),
                     "citation": f"[{document.metadata.get('source', 'unknown')}]",
+                    "semantic_score": round(semantic_score, 3),
+                    "keyword_score": keyword_score,
+                    "hybrid_score": hybrid_score,
                 }
-                for index, document in enumerate(documents, start=1)
+                for index, (document, semantic_score, keyword_score, hybrid_score) in enumerate(documents, start=1)
             ],
         }
     except Exception as exc:
@@ -436,12 +579,36 @@ def calculate_energy_savings(
     }
 
 
+@tool
+def calculate_carbon_impact(
+    shifted_energy_kwh: float,
+    solar_energy_kwh: float,
+    grid_intensity_g_per_kwh: float = 350.0,
+) -> dict[str, Any]:
+    """Estimate avoided grid emissions from solar use or moving flexible energy."""
+    if min(shifted_energy_kwh, solar_energy_kwh, grid_intensity_g_per_kwh) < 0:
+        return _error("energy and grid intensity values must be zero or greater")
+    avoided_grid_kwh = min(shifted_energy_kwh, solar_energy_kwh)
+    avoided_kg = avoided_grid_kwh * grid_intensity_g_per_kwh / 1000
+    return {
+        "shifted_energy_kwh": round(shifted_energy_kwh, 2),
+        "solar_energy_kwh": round(solar_energy_kwh, 2),
+        "avoided_grid_energy_kwh": round(avoided_grid_kwh, 2),
+        "grid_intensity_g_co2e_per_kwh": round(grid_intensity_g_per_kwh, 1),
+        "estimated_avoided_kg_co2e": round(avoided_kg, 2),
+        "method": "transparent demo estimate using a configurable grid intensity",
+    }
+
+
 TOOL_KIT = [
     get_weather_forecast,
     get_electricity_prices,
     query_energy_usage,
     query_solar_generation,
     get_recent_energy_summary,
+    get_user_preferences,
+    get_personalized_tomorrow_plan,
     search_energy_tips,
     calculate_energy_savings,
+    calculate_carbon_impact,
 ]

@@ -1,0 +1,24 @@
+{
+  "location": "Berlin, Germany",
+  "timezone": "Europe/Berlin",
+  "currency": "EUR",
+  "ev": {
+    "departure_time": "07:30",
+    "target_charge_kwh": 16.0,
+    "allow_midday_charging": true
+  },
+  "comfort": {
+    "minimum_temperature_c": 20.0,
+    "maximum_temperature_c": 23.0,
+    "quiet_hours": ["22:00", "07:00"]
+  },
+  "battery": {
+    "reserve_percent": 25,
+    "use_during_peak_hours": true
+  },
+  "priorities": {
+    "maximize_solar": true,
+    "avoid_peak_prices": true,
+    "carbon_aware": true
+  }
+}

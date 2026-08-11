@@ -9,6 +9,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 import tools
 from agent import Agent
 from models.energy import DatabaseManager, EnergyUsage, SolarGeneration, populate_berlin_sample_data
+from models.preferences import load_user_preferences
 
 
 class FakeResponse:
@@ -91,6 +92,34 @@ def test_savings_supports_price_shifting():
     assert result["annual_savings_eur"] > 100
 
 
+def test_carbon_impact_is_a_clear_configurable_estimate():
+    result = tools.calculate_carbon_impact.invoke(
+        {"shifted_energy_kwh": 4.0, "solar_energy_kwh": 3.0, "grid_intensity_g_per_kwh": 350}
+    )
+    assert result["avoided_grid_energy_kwh"] == 3.0
+    assert result["estimated_avoided_kg_co2e"] == 1.05
+    assert "estimate" in result["method"]
+
+
+def test_personalized_plan_respects_preferences_and_explains_its_inputs():
+    tomorrow = (tools.datetime.now(tools.BERLIN_TIMEZONE).date() + tools.timedelta(days=1)).isoformat()
+    weather = {
+        "data_source": "Open Meteo",
+        "fallback": False,
+        "hourly": [
+            {"time": f"{tomorrow}T10:00", "hour": 10, "solar_irradiance_w_m2": 420},
+            {"time": f"{tomorrow}T11:00", "hour": 11, "solar_irradiance_w_m2": 610},
+            {"time": f"{tomorrow}T12:00", "hour": 12, "solar_irradiance_w_m2": 700},
+        ],
+    }
+    prices = tools.get_electricity_prices.invoke({"date": tomorrow})
+    plan = tools.build_tomorrow_plan(weather, prices, load_user_preferences())
+    assert plan["confidence"] == "high"
+    assert len(plan["plan"]) == 4
+    assert plan["plan"][0]["device"] == "EV charger"
+    assert plan["estimated_impact"]["carbon"]["estimated_avoided_kg_co2e"] > 0
+
+
 def test_all_seven_energy_documents_are_available():
     documents = tools.load_energy_tip_documents()
     assert len(documents) == 7
@@ -105,8 +134,19 @@ def test_all_seven_energy_documents_are_available():
     }
 
 
+def test_hybrid_retrieval_keyword_score_rewards_direct_matches():
+    assert tools._keyword_overlap("HVAC evening energy", "HVAC energy use can be reduced in the evening") == 1.0
+    assert tools._keyword_overlap("HVAC evening energy", "Battery charging at lunch") == 0.0
+
+
 def test_agent_contract_and_tool_list():
     agent = Agent("You are a clear energy advisor for Berlin homes.")
     assert agent.graph is not None
     assert agent.model_name == "gpt-5.6-luna"
-    assert {"get_weather_forecast", "get_electricity_prices", "search_energy_tips"}.issubset(agent.get_agent_tools())
+    assert {
+        "get_weather_forecast",
+        "get_electricity_prices",
+        "search_energy_tips",
+        "get_personalized_tomorrow_plan",
+        "calculate_carbon_impact",
+    }.issubset(agent.get_agent_tools())

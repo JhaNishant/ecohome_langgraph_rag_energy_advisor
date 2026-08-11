@@ -12,6 +12,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
+from models.preferences import load_user_preferences
 from tools import TOOL_KIT
 
 
@@ -60,7 +61,15 @@ class Agent:
             raise ValueError("question must be nonempty")
         if not self.api_key:
             raise RuntimeError("Set VOCAREUM_API_KEY or OPENAI_API_KEY before invoking the advisor")
-        context_text = context.strip() if context else "Location: Berlin, Germany. Timezone: Europe/Berlin. Currency: EUR."
+        preferences = load_user_preferences()
+        profile_context = (
+            f"Preferences: EV departure {preferences['ev']['departure_time']}; "
+            f"comfort {preferences['comfort']['minimum_temperature_c']}–{preferences['comfort']['maximum_temperature_c']}°C; "
+            f"battery reserve {preferences['battery']['reserve_percent']}%; "
+            f"solar priority {preferences['priorities']['maximize_solar']}."
+        )
+        base_context = context.strip() if context else "Location: Berlin, Germany. Timezone: Europe/Berlin. Currency: EUR."
+        context_text = f"{base_context}\n{profile_context}"
         system_prompt = f"{self.instructions}\n\nCurrent customer context:\n{context_text}"
         return self.graph.invoke(
             {"messages": [SystemMessage(content=system_prompt), HumanMessage(content=question.strip())]}
