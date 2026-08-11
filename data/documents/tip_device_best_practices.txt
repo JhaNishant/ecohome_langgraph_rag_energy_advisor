@@ -1,0 +1,37 @@
+Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or during periods of high solar generation. Consult your device manual for specific scheduling instructions.
+
+Electric Vehicle Charging:
+- Charge during off-peak hours (typically 11 PM to 6 AM) to save money
+- Use Level 2 charging at home for faster charging when needed
+- Set charging to complete just before you need the vehicle
+- Consider charging during peak solar generation hours if you have solar panels
+
+Washing Machine Optimization:
+- Run full loads to maximize efficiency
+- Use cold water for most loads to save energy
+- Schedule loads during off-peak hours or when solar generation is high
+- Clean the machine regularly to maintain efficiency
+
+Dishwasher Best Practices:
+- Only run when completely full
+- Use the energy-saving or eco mode when available
+- Schedule during off-peak hours or high solar generation periods
+- Skip the heated dry cycle and air dry instead
+
+Water Heater Management:
+- Set temperature to 120°F for optimal efficiency
+- Insulate hot water pipes to reduce heat loss
+- Consider a timer to turn off during peak hours
+- Drain sediment annually to maintain efficiency
+
+HVAC System Optimization:
+- Change air filters monthly for better airflow
+- Clean outdoor condenser coils annually
+- Use programmable thermostats to adjust temperatures automatically
+- Seal ductwork to prevent air leaks
+
+Pool and Spa Equipment:
+- Run pool pumps during off-peak hours
+- Use pool covers to reduce heating needs
+- Consider variable-speed pumps for better efficiency
+- Maintain proper chemical balance to reduce filtration needs

@@ -1,0 +1,7 @@
+Smart Home Automation Tips
+
+Use delayed start, smart plugs, and home routines to move flexible work away from the evening peak. Good candidates include dishwashers, washing machines, dryers, pool pumps, and EV charging.
+
+Set a rule that starts a flexible appliance only when it is full, the electricity price is low, or expected solar radiation is strong. Always keep safety limits in place: do not run appliances unattended when the manufacturer advises against it.
+
+Review automation once a month. A routine that was useful in summer may need different hours in a darker winter month.

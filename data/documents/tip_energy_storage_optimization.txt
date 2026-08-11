@@ -1,0 +1,7 @@
+Home Battery and Energy Storage
+
+Charge a home battery when expected solar production is strong or when the grid price is low. Keep a reserve for essential loads instead of always draining the battery during the most expensive period.
+
+Avoid cycling a battery only for a tiny price difference. A useful automation needs a clear gap between charge and discharge prices after efficiency losses are considered.
+
+Use forecast based scheduling: save midday solar for the evening peak when the next day is cloudy, and leave more room for charging when a sunny day is expected.
