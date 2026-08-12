@@ -218,7 +218,7 @@ def get_electricity_prices(date: str | None = None) -> dict[str, Any]:
     rates = [
         {
             "hour": hour,
-            "rate_eur_per_kwh": berlin_price_for_hour(hour),
+            "rate_eur_per_kwh": berlin_price_for_hour(hour, selected_date),
             "period": period(hour),
             "demand_charge_eur": 0.0,
         }
@@ -228,7 +228,11 @@ def get_electricity_prices(date: str | None = None) -> dict[str, Any]:
         "date": selected_date.isoformat(),
         "location": "Berlin, Germany",
         "timezone": "Europe/Berlin",
-        "pricing_type": "deterministic_time_of_use",
+        "pricing_type": "deterministic_date_aware_time_of_use",
+        "pricing_method": (
+            "Berlin time of use windows adjusted by the selected date's season, "
+            "weekday, and repeatable daily market factor."
+        ),
         "currency": "EUR",
         "unit": "EUR_per_kWh",
         "hourly_rates": rates,

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import random
-from datetime import datetime, timedelta
+from datetime import date as Date, datetime, timedelta
 from pathlib import Path
 from sqlalchemy import Column, DateTime, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -140,17 +140,43 @@ class DatabaseManager:
         return self.get_generation_by_date_range(end_time - timedelta(hours=hours), end_time)
 
 
-def berlin_price_for_hour(hour: int) -> float:
-    """Deterministic euro price used consistently in demo data and the price tool."""
+def berlin_price_for_hour(hour: int, pricing_date: Date | datetime | None = None) -> float:
+    """Return a repeatable Berlin tariff that varies by hour and calendar date.
+
+    The model combines time of use windows with a seasonal, weekday, and small
+    day specific market factor. It is deliberately deterministic: asking for
+    the same date always returns the same tariff, while different dates can
+    produce different prices without requiring a paid pricing API.
+    """
+    if not 0 <= hour <= 23:
+        raise ValueError("hour must be between 0 and 23")
+    if pricing_date is None:
+        selected_date = datetime.now().date()
+    elif isinstance(pricing_date, datetime):
+        selected_date = pricing_date.date()
+    else:
+        selected_date = pricing_date
+
     if 0 <= hour < 6:
-        return 0.24
-    if 6 <= hour < 8:
-        return 0.32
-    if 8 <= hour < 16:
-        return 0.35
-    if 16 <= hour < 21:
-        return 0.46
-    return 0.30
+        base_rate = 0.24
+    elif 6 <= hour < 8:
+        base_rate = 0.32
+    elif 8 <= hour < 16:
+        base_rate = 0.35
+    elif 16 <= hour < 21:
+        base_rate = 0.46
+    else:
+        base_rate = 0.30
+
+    seasonal_factor = {
+        12: 1.14, 1: 1.14, 2: 1.14,
+        3: 0.98, 4: 0.98, 5: 0.98,
+        6: 0.88, 7: 0.88, 8: 0.88,
+        9: 1.04, 10: 1.04, 11: 1.04,
+    }[selected_date.month]
+    weekday_factor = 0.86 if selected_date.weekday() >= 5 else 1.0
+    daily_market_factor = 0.94 + ((selected_date.toordinal() * 17) % 13) / 100
+    return round(base_rate * seasonal_factor * weekday_factor * daily_market_factor, 3)
 
 
 def populate_berlin_sample_data(manager: DatabaseManager, days: int = 30, seed: int = 42) -> dict:
@@ -176,7 +202,7 @@ def populate_berlin_sample_data(manager: DatabaseManager, days: int = 30, seed: 
         temperature_base = 8 + ((day_offset * 3) % 14)
         for hour in range(24):
             timestamp = day.replace(hour=hour)
-            price = berlin_price_for_hour(hour)
+            price = berlin_price_for_hour(hour, timestamp.date())
             ev_load = 6.8 if hour in {0, 1, 2, 3, 4, 5} else 1.1 if hour in {11, 12, 13, 14} else 0.18
             hvac_load = 1.25 if hour in {6, 7, 17, 18, 19, 20} else 0.62
             appliance_load = 1.45 if hour in {19, 20, 21} else 0.58

@@ -2,33 +2,19 @@
   {
     "test_id": "ev_charging",
     "question": "When should I charge my electric car tomorrow to minimize cost and maximize solar power?",
-    "final_response": "**Charge tomorrow, 13 August, between 00:00 and 05:00 Berlin time**, targeting your 16 kWh requirement. This is the lowest-cost period and finishes well before your **07:30 departure**.\n\n- **Grid price:** \u20ac0.24/kWh overnight, versus \u20ac0.32/kWh at 06:00\u201307:00 and \u20ac0.35/kWh during the daytime.\n- **Estimated charging cost:** about **\u20ac3.84** for 16 kWh, excluding charging losses.\n- Charging the same 16 kWh during the \u20ac0.35/kWh daytime period would cost \u20ac5.60\u2014about **\u20ac1.76 more**, according to the savings calculation.\n- **Solar:** Tomorrow\u2019s strongest solar window is roughly **10:00\u201316:00**, peaking around 13:00\u201314:00. However, your car is scheduled to leave at 07:30, when solar production is still weak, so midday solar charging is not compatible with that departure.\n\nIf your car can charge at a lower power, spread the session across 00:00\u201305:00; otherwise, start early enough to allow for the vehicle\u2019s charging rate and losses. Avoid 16:00\u201320:00, when electricity reaches \u20ac0.46/kWh.",
+    "final_response": "**Charge the EV from 00:00\u201306:00 tomorrow (13 August) to obtain up to 16 kWh before your 07:30 departure.** This is the lowest-cost option because it uses Berlin\u2019s off-peak period and avoids the 16:00\u201321:00 peak window.\n\n- **Solar:** The strongest forecast solar period is **09:00\u201316:00**, but that is after your departure, so it cannot reliably meet tomorrow morning\u2019s requirement.\n- **If the car will remain at home:** You could defer any non-essential charging to **09:00\u201316:00** to use more rooftop solar\u2014but only if the battery already has enough charge for the 07:30 trip.\n- **Assumption:** The vehicle needs the saved target of **16 kWh** by departure. The recommendation is a schedule only; it does not control the charger.",
     "tool_calls": [
-      "get_weather_forecast",
-      "get_electricity_prices",
-      "get_user_preferences",
-      "calculate_energy_savings"
+      "get_personalized_tomorrow_plan",
+      "get_user_preferences"
     ],
     "tool_trace": [
       {
-        "tool": "get_weather_forecast",
-        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 2, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T02:00\", \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.8, \"condition\": \"clear_sky\", \"humidity_percent\": 62, \"wind_speed_kmh\": 3.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"hou"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "tool": "get_personalized_tomorrow_plan",
+        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"confidence\": \"high\", \"data_inputs\": {\"weather_source\": \"Open Meteo\", \"forecast_solar_window\": \"09:00\u201319:00\", \"recommended_flexible_load_window\": \"09:00\u201316:00\", \"off_peak_window\": \"00:00\u201306:00\", \"peak_window\": \"16:00\u201321:00\", \"quiet_hours\": [\"22:00\", \"07:00\"], \"ev_departure_time\": \"07:30\"}, \"plan\": [{\"device\": \"EV charger\", \"window\": \"00:00\u201306:00\", \"action\": \"Charge up to 16.0 kWh before 07:30\", \"why\": \"uses the cheapest available grid period before the departure deadline\"}, {\"device\": \"Flexible appliances\", \"window\": \"09:00\u201316:00\", \"action\": \"Run dishwasher, washing, or water heating during this window\", \"why\": \"matches the strongest forecast solar period while staying outside quiet hours\"}, {\"device\": \"HVAC\", \"window\": \"09:00\u201316:00\", \"action\": \"Preheat or precool within 20.0\u201323.0\u00b0C\", \"why\": \"uses lower cost daytime energy without giving up comfort\"}, {\"device\": \"Home battery\", \"window\": \"16:00\u201321:00\", \"action\": \"Keep 25% in reserve and use stored energy during peak hours\", \"why\": \"reduces exposure to the highest grid price period\"}], \"estimated_impact\": {\"shifted_energy_kwh\": 6.0, \"estimated_flexible_load_solar_kwh\": 10.5, \"car"
       },
       {
         "tool": "get_user_preferences",
         "output_preview": "{\"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"currency\": \"EUR\", \"ev\": {\"departure_time\": \"07:30\", \"target_charge_kwh\": 16.0, \"allow_midday_charging\": true}, \"comfort\": {\"minimum_temperature_c\": 20.0, \"maximum_temperature_c\": 23.0, \"quiet_hours\": [\"22:00\", \"07:00\"]}, \"battery\": {\"reserve_percent\": 25, \"use_during_peak_hours\": true}, \"priorities\": {\"maximize_solar\": true, \"avoid_peak_prices\": true, \"carbon_aware\": true}}"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "calculate_energy_savings",
-        "output_preview": "{\"device_type\": \"EV\", \"current_usage_kwh\": 16.0, \"optimized_usage_kwh\": 16.0, \"energy_savings_kwh\": 0.0, \"current_price_eur_per_kwh\": 0.35, \"optimized_price_eur_per_kwh\": 0.24, \"current_cost_eur\": 5.6, \"optimized_cost_eur\": 3.84, \"savings_eur\": 1.76, \"savings_percentage\": 31.4, \"annual_savings_eur\": 642.4}"
       }
     ],
     "expected_tools": [
@@ -37,46 +23,60 @@
       "get_electricity_prices"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 78.0,
+      "relevance": 88.0,
+      "completeness": 72.0,
+      "usefulness": 84.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer gives a clear, actionable pre-departure window and correctly recognizes that solar forecast hours after a 07:30 departure cannot serve the morning trip.",
+        "It explains the core solar-versus-price trade-off: overnight charging is likely cheaper, while 09:00\u201316:00 would better align with solar if the vehicle remains home and already has sufficient charge.",
+        "The 16 kWh requirement is explicitly stated as an assumption, which is useful, but the answer does not establish whether 00:00\u201306:00 is actually Berlin\u2019s lowest-cost period. It provides no tariff, dynamic-price, grid-fee, or household-solar evidence, and off-peak periods are not universally defined in Berlin.",
+        "The phrase 'up to 16 kWh' is potentially confusing: usable battery energy, charger losses, and the required state of charge may mean more than 16 kWh must be drawn from the grid. The six-hour window may also be insufficient for some vehicles or charging setups, especially on a standard household outlet; charging power should be checked against the vehicle and charger limits and any departure-preconditioning needs should be included if relevant."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "calculate_energy_savings",
-        "get_electricity_prices",
-        "get_user_preferences",
-        "get_weather_forecast"
-      ],
-      "tool_appropriateness": 50.0,
-      "tool_completeness": 66.7,
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 95.0,
       "feedback": [
-        "Missing expected tools: get_personalized_tomorrow_plan",
-        "Additional tools used: calculate_energy_savings, get_user_preferences"
-      ]
+        "get_personalized_tomorrow_plan is an appropriate combined tool: its output explicitly includes the forecast solar window, off-peak and peak windows, departure deadline, and a charging recommendation.",
+        "get_user_preferences is relevant supporting evidence because it confirms the user's departure time, target charge, and priorities to maximize solar and avoid peak prices.",
+        "No separate weather or electricity-price call is required because the personalized plan explicitly incorporates both weather and pricing inputs and provides the resulting schedule.",
+        "The only minor limitation is that the trace does not expose exact hourly prices or solar irradiance values, so the recommendation cannot be independently inspected at that level. For answering when to charge, however, the evidence is sufficient: charge from 00:00\u201306:00 to meet the 07:30 departure, while the broader solar window is 09:00\u201316:00 if midday charging is feasible."
+      ],
+      "actual_tools": [
+        "get_personalized_tomorrow_plan",
+        "get_user_preferences"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:13:35.691281"
+    "timestamp": "2026-08-12T09:40:53.650449"
   },
   {
     "test_id": "thermostat_peak",
     "question": "What thermostat approach should I use tomorrow afternoon if electricity prices are high?",
-    "final_response": "**Tomorrow, pre-cool your home modestly between 09:00 and 16:00, then let the thermostat hold a steady 22\u201323\u00b0C during the expensive 16:00\u201321:00 period.** Avoid switching the system fully off or making large temperature changes.\n\n- **09:00\u201316:00:** Use forecast solar availability to cool toward the comfortable lower end of your **20\u201323\u00b0C** range\u2014around **22\u00b0C** is a reasonable target.\n- **16:00\u201321:00:** Maintain rather than aggressively cool. Raise the setpoint slightly, up to **23\u00b0C**, if comfortable, and close blinds or shades against afternoon sun.\n- **If using a heat pump:** Prefer a steady adjustment instead of repeatedly turning it off and on.\n- **After 21:00:** Return to your normal comfort setting once the peak-price window ends.\n\nThe tomorrow plan identifies **09:00\u201316:00** as the strongest solar/flexible-energy window and **16:00\u201321:00** as the peak period. This is a scheduling recommendation only; actual savings depend on your HVAC system, insulation, indoor temperature, and solar production. Practical guidance is from **[tip_hvac_optimization.txt]** and **[tip_seasonal_energy_management.txt]**.",
+    "final_response": "**Tomorrow afternoon, keep the thermostat near the warmer end of your comfort range without aggressive cycling: set cooling to about 23\u00b0C, or heating to about 20\u00b0C.** If your home is comfortable, avoid starting large HVAC changes during the **16:00\u201320:00 peak-price window**.\n\n- **13:00\u201315:00:** The forecast is sunny, with temperatures rising from about **24.3\u00b0C to 26.2\u00b0C** and strong solar radiation. If cooling is needed, lightly pre-cool toward **23\u00b0C** before 16:00, preferably using your own solar power.\n- **16:00\u201320:00:** Prices are highest at **\u20ac0.401/kWh**. Let the indoor temperature drift modestly\u2014no more than your **20\u201323\u00b0C comfort preference**\u2014and use blinds or shade to limit heat gain.\n- **After 20:00:** Outdoor temperatures remain warm, but prices fall to **\u20ac0.261/kWh from 21:00**. Resume normal cooling only if needed; ventilate later in the evening when outdoor air is cooler.\n\nIf you use a heat pump, make a steady modest adjustment rather than switching it fully off and back on. This follows the HVAC guidance in **[tip_hvac_optimization.txt]** and seasonal advice in **[tip_seasonal_energy_management.txt]**. Actual savings depend on your HVAC power and how long it runs; I have not assumed a specific saving.",
     "tool_calls": [
-      "get_personalized_tomorrow_plan",
+      "get_weather_forecast",
+      "get_electricity_prices",
       "search_energy_tips"
     ],
     "tool_trace": [
       {
-        "tool": "get_personalized_tomorrow_plan",
-        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"confidence\": \"high\", \"data_inputs\": {\"weather_source\": \"Open Meteo\", \"forecast_solar_window\": \"09:00\u201319:00\", \"recommended_flexible_load_window\": \"09:00\u201316:00\", \"off_peak_window\": \"00:00\u201306:00\", \"peak_window\": \"16:00\u201321:00\", \"quiet_hours\": [\"22:00\", \"07:00\"], \"ev_departure_time\": \"07:30\"}, \"plan\": [{\"device\": \"EV charger\", \"window\": \"00:00\u201306:00\", \"action\": \"Charge up to 16.0 kWh before 07:30\", \"why\": \"uses the cheapest available grid period before the departure deadline\"}, {\"device\": \"Flexible appliances\", \"window\": \"09:00\u201316:00\", \"action\": \"Run dishwasher, washing, or water heating during this window\", \"why\": \"matches the strongest forecast solar period while staying outside quiet hours\"}, {\"device\": \"HVAC\", \"window\": \"09:00\u201316:00\", \"action\": \"Preheat or precool within 20.0\u201323.0\u00b0C\", \"why\": \"uses lower cost daytime energy without giving up comfort\"}, {\"device\": \"Home battery\", \"window\": \"16:00\u201321:00\", \"action\": \"Keep 25% in reserve and use stored energy during peak hours\", \"why\": \"reduces exposure to the highest grid price period\"}], \"estimated_impact\": {\"shifted_energy_kwh\": 6.0, \"estimated_flexible_load_solar_kwh\": 10.5, \"car"
+        "tool": "get_weather_forecast",
+        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 2, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T09:30\", \"temperature_c\": 17.1, \"condition\": \"clear_sky\", \"humidity_percent\": 53, \"wind_speed_kmh\": 4.0, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 473.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 14.9, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 4.6, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.3, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 3.8, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"h"
+      },
+      {
+        "tool": "get_electricity_prices",
+        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_e"
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"thermostat settings during high electricity prices afternoon preheating cooling comfort\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"HVAC Optimization for Berlin Homes\\n\\nUse a programmable thermostat to reduce heating or cooling when rooms are empty. In winter, set a lower temperature overnight and warm the home shortly before people wake up. In summer, pre cool during lower cost hours if a hot afternoon is expected.\\n\\nKeep filters clean, avoid blocking radiators, and close blinds on sunny summer afternoons. Small changes work best when they are paired with a comfortable temperature range rather than aggressive temperature swings.\\n\\nFor a heat pump, avoid repeatedly turning the system fully off and on. A steady, modest adjustment usually uses less energy and protects comfort.\", \"source\": \"tip_hvac_optimization.txt\", \"citation\": \"[tip_hvac_optimization.txt]\", \"semantic_score\": 0.48, \"keyword_score\": 0.5, \"hybrid_score\": 0.485}, {\"rank\": 2, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in late spring and summer, and more heating demand in autu"
+        "output_preview": "{\"query\": \"thermostat settings during high electricity prices afternoon Berlin heating cooling comfort\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"HVAC Optimization for Berlin Homes\\n\\nUse a programmable thermostat to reduce heating or cooling when rooms are empty. In winter, set a lower temperature overnight and warm the home shortly before people wake up. In summer, pre cool during lower cost hours if a hot afternoon is expected.\\n\\nKeep filters clean, avoid blocking radiators, and close blinds on sunny summer afternoons. Small changes work best when they are paired with a comfortable temperature range rather than aggressive temperature swings.\\n\\nFor a heat pump, avoid repeatedly turning the system fully off and on. A steady, modest adjustment usually uses less energy and protects comfort.\", \"source\": \"tip_hvac_optimization.txt\", \"citation\": \"[tip_hvac_optimization.txt]\", \"semantic_score\": 0.564, \"keyword_score\": 0.636, \"hybrid_score\": 0.582}, {\"rank\": 2, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in late spring and summer, and more heating demand "
+      },
+      {
+        "tool": "get_electricity_prices",
+        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.279, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.279, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.305, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.305, \"period\": \"standard\", \"demand_charge_e"
       }
     ],
     "expected_tools": [
@@ -85,54 +85,61 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 88.0,
+      "relevance": 94.0,
+      "completeness": 90.0,
+      "usefulness": 92.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer directly addresses the high-price afternoon period and gives actionable setpoints, timing, and shading/ventilation steps that a Berlin household could follow.",
+        "It appropriately recommends modest pre-cooling before the 16:00\u201320:00 peak rather than aggressive cycling, and connects this to the stated sunny, warming forecast and price levels.",
+        "The comfort-safety framing is good: it limits drift to the user\u2019s comfort range and avoids claiming guaranteed savings. The heat-pump caveat is also sensible.",
+        "The recommendation could be more explicit about heating versus cooling: the forecast suggests cooling is the relevant case, while a 20\u00b0C heating setting may be unnecessary or potentially confusing in a warm, sunny afternoon. It should say to use only the applicable mode and not heat and cool simultaneously if the system permits that ambiguity.,"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 100.0,
+      "feedback": [
+        "All three expected evidence routes were used appropriately: the weather forecast supports afternoon heating/cooling needs, electricity prices identify high-cost periods, and energy tips provide thermostat guidance.",
+        "The additional price lookup for the next day is relevant because the question asks about tomorrow afternoon, and is not redundant or inappropriate.",
+        "No required evidence is missing."
+      ],
       "actual_tools": [
-        "get_personalized_tomorrow_plan",
+        "get_weather_forecast",
+        "get_electricity_prices",
         "search_energy_tips"
       ],
-      "tool_appropriateness": 50.0,
-      "tool_completeness": 33.3,
-      "feedback": [
-        "Missing expected tools: get_electricity_prices, get_weather_forecast",
-        "Additional tools used: get_personalized_tomorrow_plan"
-      ]
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:13:46.795316"
+    "timestamp": "2026-08-12T09:41:14.151399"
   },
   {
     "test_id": "dishwasher",
     "question": "How much can I save by running my dishwasher during off peak hours?",
-    "final_response": "**Recommendation:** Run the dishwasher between **00:00 and 06:00**, when Berlin\u2019s rate is **\u20ac0.24/kWh**.\n\nAssuming one dishwasher cycle uses **1.0 kWh**:\n\n- At the standard rate (\u20ac0.35/kWh): **\u20ac0.35 per cycle**\n- Off-peak: **\u20ac0.24 per cycle**\n- **Estimated saving: \u20ac0.11 per cycle**, or about **31%**\n\nIf you would otherwise run it during the evening peak (16:00\u201320:00 at \u20ac0.46/kWh), the saving rises to **\u20ac0.22 per cycle**.\n\nYour recent energy history contains no dishwasher readings, so the estimate uses 1.0 kWh per cycle. Actual savings scale with consumption:  \n**saving = cycle kWh \u00d7 \u20ac0.11** compared with standard pricing.\n\nFor additional savings, run a full load on Eco mode and skip heated drying where practical [tip_device_best_practices.txt]. Check the manufacturer\u2019s guidance before operating it unattended.",
+    "final_response": "**You could save about \u20ac0.09 per dishwasher cycle** by shifting a typical 1 kWh cycle from standard hours to off-peak hours\u2014roughly **\u20ac34 per year if run daily**.\n\n- **Off-peak:** 00:00\u201305:59 at **\u20ac0.201/kWh**\n- **Standard:** 08:00\u201315:59 at **\u20ac0.293/kWh**\n- **Peak:** 16:00\u201320:59 at **\u20ac0.385/kWh**\n\nIf you currently run it during peak hours, the saving would be about **\u20ac0.18 per 1 kWh cycle**, or approximately **\u20ac67 per year daily**. Your actual saving scales with the dishwasher\u2019s consumption\u2014for example, a 0.7 kWh eco cycle saves about 70% of these figures.\n\nFor best results, run it fully loaded on eco mode, use delayed start overnight, and skip heated drying where practical [tip_device_best_practices.txt]. These estimates assume the dishwasher uses 1 kWh per cycle and exclude any solar benefit.",
     "tool_calls": [
       "get_electricity_prices",
-      "query_energy_usage",
+      "get_recent_energy_summary",
       "search_energy_tips",
       "calculate_energy_savings"
     ],
     "tool_trace": [
       {
         "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_e"
       },
       {
-        "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-03-17\", \"end_date\": \"2026-03-24\", \"device_type\": \"dishwasher\", \"total_records\": 0, \"total_consumption_kwh\": 0, \"total_cost_eur\": 0, \"records\": []}"
+        "tool": "get_recent_energy_summary",
+        "output_preview": "{\"time_period_hours\": 24, \"usage\": {\"total_consumption_kwh\": 82.48, \"total_cost_eur\": 21.33, \"device_breakdown\": {\"EV\": {\"consumption_kwh\": 47.49, \"cost_eur\": 10.37, \"records\": 24}, \"HVAC\": {\"consumption_kwh\": 18.33, \"cost_eur\": 5.77, \"records\": 24}, \"appliance\": {\"consumption_kwh\": 16.67, \"cost_eur\": 5.19, \"records\": 24}}}, \"generation\": {\"total_generation_kwh\": 26.77, \"latest_weather_condition\": \"partly_cloudy\"}}"
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"dishwasher run during off-peak hours electricity savings\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or during periods of high solar generation. Consult your device manual for specific scheduling instructions.\\n\\nElectric Vehicle Charging:\\n- Charge during off-peak hours (typically 11 PM to 6 AM) to save money\\n- Use Level 2 charging at home for faster charging when needed\\n- Set charging to complete just before you need the vehicle\\n- Consider charging during peak solar generation hours if you have solar panels\", \"source\": \"tip_device_best_practices.txt\", \"citation\": \"[tip_device_best_practices.txt]\", \"semantic_score\": 0.481, \"keyword_score\": 0.75, \"hybrid_score\": 0.548}, {\"rank\": 2, \"content\": \"Washing Machine Optimization:\\n- Run full loads to maximize efficiency\\n- Use cold water for most loads to save energy\\n- Schedule loads during off-peak hours or when solar generation is high\\n- Clean the machin"
+        "output_preview": "{\"query\": \"dishwasher run during off-peak electricity hours reduce energy costs\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Washing Machine Optimization:\\n- Run full loads to maximize efficiency\\n- Use cold water for most loads to save energy\\n- Schedule loads during off-peak hours or when solar generation is high\\n- Clean the machine regularly to maintain efficiency\\n\\nDishwasher Best Practices:\\n- Only run when completely full\\n- Use the energy-saving or eco mode when available\\n- Schedule during off-peak hours or high solar generation periods\\n- Skip the heated dry cycle and air dry instead\\n\\nWater Heater Management:\\n- Set temperature to 120\u00b0F for optimal efficiency\\n- Insulate hot water pipes to reduce heat loss\\n- Consider a timer to turn off during peak hours\\n- Drain sediment annually to maintain efficiency\", \"source\": \"tip_device_best_practices.txt\", \"citation\": \"[tip_device_best_practices.txt]\", \"semantic_score\": 0.446, \"keyword_score\": 0.8, \"hybrid_score\": 0.535}, {\"rank\": 2, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or ti"
       },
       {
         "tool": "calculate_energy_savings",
-        "output_preview": "{\"device_type\": \"dishwasher\", \"current_usage_kwh\": 1.0, \"optimized_usage_kwh\": 1.0, \"energy_savings_kwh\": 0.0, \"current_price_eur_per_kwh\": 0.35, \"optimized_price_eur_per_kwh\": 0.24, \"current_cost_eur\": 0.35, \"optimized_cost_eur\": 0.24, \"savings_eur\": 0.11, \"savings_percentage\": 31.4, \"annual_savings_eur\": 40.15}"
+        "output_preview": "{\"device_type\": \"dishwasher\", \"current_usage_kwh\": 1.0, \"optimized_usage_kwh\": 1.0, \"energy_savings_kwh\": 0.0, \"current_price_eur_per_kwh\": 0.293, \"optimized_price_eur_per_kwh\": 0.201, \"current_cost_eur\": 0.29, \"optimized_cost_eur\": 0.2, \"savings_eur\": 0.09, \"savings_percentage\": 31.4, \"annual_savings_eur\": 33.58}"
       }
     ],
     "expected_tools": [
@@ -142,163 +149,41 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 83.3,
-      "relevance": 76.7,
-      "completeness": 66.7,
-      "usefulness": 100.0,
+      "accuracy": 82.0,
+      "relevance": 91.0,
+      "completeness": 78.0,
+      "usefulness": 88.0,
       "feedback": [
-        "Mention the missing ideas: eur"
-      ]
+        "The answer directly provides EUR savings, compares off-peak with standard and peak pricing, and identifies a clear actionable window: 00:00\u201305:59. It is practical for a Berlin household, including delayed-start advice.",
+        "The arithmetic is internally correct for the stated 1 kWh assumption: \u20ac0.293\u2212\u20ac0.201 = \u20ac0.092, and \u20ac0.385\u2212\u20ac0.201 = \u20ac0.184; annual daily figures are appropriately rounded.",
+        "It avoids guaranteeing savings by using 'could,' 'about,' and explicitly stating the 1 kWh assumption. It also notes that actual savings scale with consumption and excludes solar effects.",
+        "The response does not demonstrate that 1 kWh is the dishwasher\u2019s typical consumption from the household dishwasher history, nor does it cite or summarize the relevant historical usage. If the history supports a different average, the estimate should use that value or present it as a range based on the observed cycles and programs used. This is the main evidence gap against the first criterion and may affect accuracy of the headline estimate and annual totals."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "calculate_energy_savings",
-        "get_electricity_prices",
-        "query_energy_usage",
-        "search_energy_tips"
-      ],
-      "tool_appropriateness": 100.0,
-      "tool_completeness": 100.0,
+      "tool_appropriateness": 90.0,
+      "tool_completeness": 82.0,
       "feedback": [
-        "The expected tools were used without extras."
-      ]
+        "The tool choices are semantically appropriate: electricity prices establish the off-peak and comparison rates, the recent energy summary provides household/appliance context, search_energy_tips supplies relevant dishwasher guidance, and calculate_energy_savings produces a concrete estimate.",
+        "Using get_recent_energy_summary instead of query_energy_usage is reasonable supporting evidence, but it is less precise because it reports aggregate appliance consumption rather than dishwasher-specific historical usage.",
+        "The calculation assumes 1.0 kWh per dishwasher cycle and compares \u20ac0.293/kWh with \u20ac0.201/kWh, yielding about \u20ac0.09 saved per cycle and \u20ac33.58 annually. This directly answers the question, though the assumed cycle consumption and annual frequency should be stated or verified.",
+        "No essential pricing or savings-calculation route is missing. For a more personalized and defensible estimate, the advisor should obtain dishwasher-level usage via query_energy_usage, or clearly label the result as an assumption rather than a measured estimate."
+      ],
+      "actual_tools": [
+        "get_electricity_prices",
+        "get_recent_energy_summary",
+        "search_energy_tips",
+        "calculate_energy_savings"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:14:00.211305"
+    "timestamp": "2026-08-12T09:41:35.428182"
   },
   {
     "test_id": "washing_machine",
     "question": "When should I run a washing machine tomorrow in Berlin?",
-    "final_response": "**Run the washing machine tomorrow, Thursday 13 August, around 12:00\u201315:00 Berlin time**\u2014ideally starting at **13:00** if the cycle takes 1\u20132 hours.\n\n- **Solar:** Forecast conditions are clear, with strongest solar radiation from roughly **11:00\u201315:00**, so daytime laundry should use more of your rooftop solar.\n- **Prices:** Grid electricity is **\u20ac0.35/kWh from 08:00\u201315:00**, rising to **\u20ac0.46/kWh from 16:00\u201320:00**. Avoid the evening peak.\n- **Backup option:** If daytime solar production is unexpectedly low, use the cheaper **00:00\u201305:00** off-peak period at **\u20ac0.24/kWh**.\n- Run a full load and use a cold or eco cycle where suitable, as recommended in [tip_device_best_practices.txt]. Using a timer or delayed-start function may help.",
-    "tool_calls": [
-      "get_weather_forecast",
-      "get_electricity_prices",
-      "search_energy_tips"
-    ],
-    "tool_trace": [
-      {
-        "tool": "get_weather_forecast",
-        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 2, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T02:00\", \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.8, \"condition\": \"clear_sky\", \"humidity_percent\": 62, \"wind_speed_kmh\": 3.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"hou"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"error\": \"date must use YYYY-MM-DD format\"}"
-      },
-      {
-        "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"best time to run washing machine with rooftop solar and time-of-use electricity prices\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or during periods of high solar generation. Consult your device manual for specific scheduling instructions.\\n\\nElectric Vehicle Charging:\\n- Charge during off-peak hours (typically 11 PM to 6 AM) to save money\\n- Use Level 2 charging at home for faster charging when needed\\n- Set charging to complete just before you need the vehicle\\n- Consider charging during peak solar generation hours if you have solar panels\", \"source\": \"tip_device_best_practices.txt\", \"citation\": \"[tip_device_best_practices.txt]\", \"semantic_score\": 0.481, \"keyword_score\": 0.5, \"hybrid_score\": 0.486}, {\"rank\": 2, \"content\": \"Washing Machine Optimization:\\n- Run full loads to maximize efficiency\\n- Use cold water for most loads to save energy\\n- Schedule loads during off-peak hours or when solar generatio"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      }
-    ],
-    "expected_tools": [
-      "get_personalized_tomorrow_plan",
-      "search_energy_tips"
-    ],
-    "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
-      "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
-    },
-    "tool_evaluation": {
-      "actual_tools": [
-        "get_electricity_prices",
-        "get_weather_forecast",
-        "search_energy_tips"
-      ],
-      "tool_appropriateness": 33.3,
-      "tool_completeness": 50.0,
-      "feedback": [
-        "Missing expected tools: get_personalized_tomorrow_plan",
-        "Additional tools used: get_electricity_prices, get_weather_forecast"
-      ]
-    },
-    "timestamp": "2026-08-12T02:14:12.583849"
-  },
-  {
-    "test_id": "pool_pump",
-    "question": "What is the best time to run my pool pump this week based on the forecast?",
-    "final_response": "**Best time this week: run the pool pump mainly from 10:00\u201315:00 Berlin time**, when solar production should be strongest. Avoid **16:00\u201320:00**, the forecasted peak-price period.\n\n### Suggested schedule\n\n- **Wed 12 Aug:** 10:00\u201316:00 \u2014 clear and very strong solar\n- **Thu 13 Aug:** 10:00\u201316:00 \u2014 clear and strong solar\n- **Fri 14 Aug:** 10:00\u201316:00 \u2014 sunny and hottest day\n- **Sat 15 Aug:** 10:00\u201314:00 \u2014 solar is better earlier; cloud increases later\n- **Sun 16 Aug:** 11:00\u201315:00 \u2014 overcast, but midday is still the brightest window\n- **Mon 17 Aug:** 10:00\u201316:00 \u2014 partly cloudy with useful solar\n- **Tue 18 Aug:** Prefer **00:00\u201306:00** if the pump must run; rain and heavy cloud make daytime solar weak\n\nThe electricity price schedule is consistent across the week: **\u20ac0.24/kWh from 00:00\u201306:00**, versus **\u20ac0.46/kWh from 16:00\u201321:00**. On cloudy or rainy days, overnight operation is therefore the cheaper grid fallback.\n\nThis follows the practical guidance to use solar electricity for flexible daytime tasks and switch to low-price overnight periods when solar is weak [tip_renewable_energy_integration.txt]. Adjust the total runtime to your pool\u2019s filtration requirement\u2014I\u2019m assuming the pump can be shifted within the day and that daytime operation is acceptable.",
-    "tool_calls": [
-      "get_weather_forecast",
-      "get_electricity_prices",
-      "search_energy_tips"
-    ],
-    "tool_trace": [
-      {
-        "tool": "get_weather_forecast",
-        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 7, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T02:00\", \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.8, \"condition\": \"clear_sky\", \"humidity_percent\": 62, \"wind_speed_kmh\": 3.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"hou"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"best time to run a pool pump using solar generation and weather forecast\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.411, \"keyword_score\": 0.455, \"hybrid_score\": 0.422}, {\"rank\": 2, \"content\": \"Home Battery and Energy Storage\\n\\nCharge a home battery when expected solar production is strong or when the grid price is low. Keep a reserve"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-14\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-15\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-16\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-17\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-18\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
-      }
-    ],
-    "expected_tools": [
-      "get_weather_forecast",
-      "get_electricity_prices",
-      "search_energy_tips"
-    ],
-    "response_evaluation": {
-      "accuracy": 83.3,
-      "relevance": 76.7,
-      "completeness": 66.7,
-      "usefulness": 100.0,
-      "feedback": [
-        "Mention the missing ideas: hour"
-      ]
-    },
-    "tool_evaluation": {
-      "actual_tools": [
-        "get_electricity_prices",
-        "get_weather_forecast",
-        "search_energy_tips"
-      ],
-      "tool_appropriateness": 100.0,
-      "tool_completeness": 100.0,
-      "feedback": [
-        "The expected tools were used without extras."
-      ]
-    },
-    "timestamp": "2026-08-12T02:14:29.998637"
-  },
-  {
-    "test_id": "solar_maximization",
-    "question": "How can I use more of my solar power tomorrow?",
-    "final_response": "**Tomorrow, shift flexible electricity use to 09:00\u201316:00** to capture the forecast solar window, especially:\n\n- Run the **dishwasher, washing machine, and water heating** during this period.\n- **Preheat or precool** within your comfort range of **20\u201323\u00b0C**, rather than doing it during the evening peak.\n- Let the **battery charge from midday solar**, while keeping its **25% reserve**.\n- Since your EV must be ready by **07:30**, charge it overnight from **00:00\u201306:00**. If it still needs charging after you return, use the daytime solar window rather than the **16:00\u201321:00** peak period.\n- Avoid starting flexible loads in the evening, when solar is weaker and grid prices are expected to be higher.\n\nThe forecast indicates useful solar from approximately **09:00\u201319:00**, with the best practical window for flexible loads **09:00\u201316:00**. Solar output is forecast-based rather than tailored to your panel size, so leave timers flexible if clouds develop.\n\nThese actions follow the recommendation to schedule EV charging, water heating, laundry, and dishwashing near the middle of the day when solar is available [tip_renewable_energy_integration.txt]. The battery guidance also recommends preserving a reserve and saving midday solar for evening use [tip_energy_storage_optimization.txt].",
+    "final_response": "**Run the washing machine tomorrow, 13 August, between 09:00 and 16:00 Berlin time**\u2014ideally during the middle of that window if convenient.\n\n- This overlaps the forecast solar period of **09:00\u201319:00**, helping use your rooftop solar directly.\n- It avoids the higher-price period of **16:00\u201321:00** and Berlin quiet hours (**22:00\u201307:00**).\n- Use a full load and an eco or cold-water cycle where suitable, as recommended in **[tip_device_best_practices.txt]**.\n- The recommendation is based on forecast solar radiation rather than a site-specific panel output, so actual solar availability may vary.",
     "tool_calls": [
       "get_personalized_tomorrow_plan",
       "search_energy_tips"
@@ -310,7 +195,116 @@
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"increase household self-consumption of rooftop solar tomorrow schedule flexible appliances EV battery\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.525, \"keyword_score\": 0.273, \"hybrid_score\": 0.462}, {\"rank\": 2, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functi"
+        "output_preview": "{\"query\": \"best time to run washing machine with rooftop solar and time-of-use electricity prices\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or during periods of high solar generation. Consult your device manual for specific scheduling instructions.\\n\\nElectric Vehicle Charging:\\n- Charge during off-peak hours (typically 11 PM to 6 AM) to save money\\n- Use Level 2 charging at home for faster charging when needed\\n- Set charging to complete just before you need the vehicle\\n- Consider charging during peak solar generation hours if you have solar panels\", \"source\": \"tip_device_best_practices.txt\", \"citation\": \"[tip_device_best_practices.txt]\", \"semantic_score\": 0.481, \"keyword_score\": 0.5, \"hybrid_score\": 0.486}, {\"rank\": 2, \"content\": \"Washing Machine Optimization:\\n- Run full loads to maximize efficiency\\n- Use cold water for most loads to save energy\\n- Schedule loads during off-peak hours or when solar generatio"
+      }
+    ],
+    "expected_tools": [
+      "get_personalized_tomorrow_plan",
+      "search_energy_tips"
+    ],
+    "response_evaluation": {
+      "accuracy": 82.0,
+      "relevance": 94.0,
+      "completeness": 88.0,
+      "usefulness": 91.0,
+      "feedback": [
+        "The answer gives a clear, actionable Berlin-time window and appropriately identifies solar use and avoidance of the stated higher-price period.",
+        "It includes a practical tip: use a full load and an eco/cold cycle where suitable, plus a reasonable caveat that forecast radiation is not the same as site-specific rooftop output.",
+        "The main factual weakness is the unexplained date: it assumes \u201ctomorrow\u201d is 13 August without establishing the year or current date. The solar and price periods are also asserted without showing their source, tariff applicability, or whether the household actually has rooftop solar or a time-of-use tariff.",
+        "The 09:00\u201316:00 window is sensible, but if maximizing solar self-consumption were the priority, a narrower midday window could be preferable; if avoiding prices were the priority, the answer should clarify whether prices are genuinely lower before 16:00 rather than merely not in the stated peak period. It also does not mention checking weather/cloud cover or the machine\u2019s noise and unattended-operation considerations."
+      ],
+      "evaluation_method": "llm_as_judge"
+    },
+    "tool_evaluation": {
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 100.0,
+      "feedback": [
+        "Both selected tools are directly relevant and acceptable for answering when to run the washing machine.",
+        "The personalized tomorrow plan provides the specific Berlin schedule and recommends flexible appliances, including washing, from 09:00\u201316:00, based on forecast solar, pricing, and preferences.",
+        "The energy-tips search is relevant supporting evidence about scheduling washing during solar or off-peak periods.",
+        "No genuinely missing evidence is apparent for this question."
+      ],
+      "actual_tools": [
+        "get_personalized_tomorrow_plan",
+        "search_energy_tips"
+      ],
+      "evaluation_method": "llm_as_judge"
+    },
+    "timestamp": "2026-08-12T09:41:51.556936"
+  },
+  {
+    "test_id": "pool_pump",
+    "question": "What is the best time to run my pool pump this week based on the forecast?",
+    "final_response": "**Best overall: run the pump during the solar window, roughly 11:00\u201316:00 Berlin time.** This week\u2019s strongest opportunity is **Thursday\u2013Saturday, especially 13:00\u201316:00**, when the forecast is sunny and solar radiation is high. This also avoids the expensive **16:00\u201320:00 peak-price period**.\n\nSuggested schedule, assuming about a 4-hour daily run:\n\n- **Wed 12 Aug:** 11:00\u201315:00 \u2014 clear skies; good solar.\n- **Thu 13 Aug:** 12:00\u201316:00 \u2014 excellent solar; sunny.\n- **Fri 14 Aug:** 12:00\u201316:00 \u2014 excellent solar; hottest and sunniest day.\n- **Sat 15 Aug:** 11:00\u201315:00 \u2014 strong solar; clear through the afternoon.\n- **Sun 16 Aug:** 12:00\u201316:00 \u2014 overcast/rainy, so solar will be limited; run then if filtration is needed.\n- **Mon 17 Aug:** 10:00\u201314:00 \u2014 partly cloudy but useful solar.\n- **Tue 18 Aug:** 10:00\u201314:00 \u2014 rainy and overcast; expect little solar. If the pump can safely wait, prioritize the sunnier days, but follow your pool\u2019s minimum filtration requirement.\n\nThe forecast supports using your own solar rather than running during the evening peak. On the rainy days, the pump will likely draw more from the grid; the retrieved guidance recommends using solar for flexible daytime loads and shifting them when the forecast changes **[tip_renewable_energy_integration.txt]**. A timer or smart plug can apply this schedule, but check the pump manufacturer\u2019s unattended-operation guidance **[tip_smart_home_automation.txt]**.",
+    "tool_calls": [
+      "get_weather_forecast",
+      "search_energy_tips",
+      "get_electricity_prices"
+    ],
+    "tool_trace": [
+      {
+        "tool": "get_weather_forecast",
+        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 7, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T09:30\", \"temperature_c\": 17.1, \"condition\": \"clear_sky\", \"humidity_percent\": 53, \"wind_speed_kmh\": 4.0, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 473.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 14.9, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 4.6, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.3, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 3.8, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"h"
+      },
+      {
+        "tool": "search_energy_tips",
+        "output_preview": "{\"query\": \"best time to run a pool pump with rooftop solar and weather forecast\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.411, \"keyword_score\": 0.364, \"hybrid_score\": 0.399}, {\"rank\": 2, \"content\": \"Home Battery and Energy Storage\\n\\nCharge a home battery when expected solar production is strong or when the grid price is low. Keep a reserve for"
+      },
+      {
+        "tool": "get_electricity_prices",
+        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_e"
+      }
+    ],
+    "expected_tools": [
+      "get_weather_forecast",
+      "get_electricity_prices",
+      "search_energy_tips"
+    ],
+    "response_evaluation": {
+      "accuracy": 78.0,
+      "relevance": 88.0,
+      "completeness": 68.0,
+      "usefulness": 82.0,
+      "feedback": [
+        "The answer directly provides an actionable recurring daytime schedule in Berlin time and identifies a sensible solar window, while avoiding the stated 16:00\u201320:00 peak-price period.",
+        "It uses forecast descriptions (sunny, cloudy, rainy) and a pricing claim, but does not provide actual forecast values, tariff rates, source dates, or evidence supporting the specific 16:00\u201320:00 peak period. The claim that Thursday\u2013Saturday are the strongest opportunities is therefore difficult to verify.",
+        "The solar rationale is clear and understandable: run during daylight to use likely rooftop solar and avoid expensive evening electricity. However, solar generation is not guaranteed merely because conditions are sunny; household load, battery state, panel orientation, and export/import tariffs matter.",
+        "The schedule assumes a four-hour daily run without knowing the pool volume, pump flow rate, filtration requirement, weather-related debris load, or whether the pump must run continuously. Advising that the pump can be deferred on rainy days could conflict with minimum filtration, sanitation, or chemical-distribution needs. The answer does include a useful caveat to follow the pool\u2019s minimum requirement, but it should be more prominent and recommend confirming the required daily runtime with the pool system guidance or installer/owner\u2019s manual."
+      ],
+      "evaluation_method": "llm_as_judge"
+    },
+    "tool_evaluation": {
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 100.0,
+      "feedback": [
+        "All three expected evidence routes were used appropriately: the weather forecast provides hourly conditions and solar irradiance, electricity prices provide tariff timing, and energy tips provide guidance for shifting flexible loads such as a pool pump.",
+        "The tools are semantically relevant to selecting a pump schedule, and no genuinely required evidence is missing."
+      ],
+      "actual_tools": [
+        "get_weather_forecast",
+        "search_energy_tips",
+        "get_electricity_prices"
+      ],
+      "evaluation_method": "llm_as_judge"
+    },
+    "timestamp": "2026-08-12T09:42:14.105148"
+  },
+  {
+    "test_id": "solar_maximization",
+    "question": "How can I use more of my solar power tomorrow?",
+    "final_response": "**Tomorrow, use your solar mainly between 09:00 and 16:00:** run the dishwasher, washing machine, water heating, and other flexible loads then. Keep your home battery\u2019s **25% reserve**, and use stored energy from **16:00\u201321:00** instead of exporting or buying during the evening peak.\n\n### Suggested schedule for Berlin\n\n- **00:00\u201306:00:** Charge the EV from the grid if needed\u2014up to **16 kWh**, completing before the **07:30 departure**. Solar is forecast later, but that would be too late for the EV.\n- **09:00\u201316:00:** Run full loads of laundry and dishes, heat water, and perform other flexible tasks. The forecast solar window is **09:00\u201319:00**, with the strongest recommended self-consumption period during these daytime hours.\n- **09:00\u201316:00:** Pre-cool or preheat within your preferred **20\u201323\u00b0C** comfort range rather than relying heavily on evening grid power.\n- **16:00\u201321:00:** Let the battery cover flexible household demand while retaining the **25% reserve**.\n\nThe plan estimates approximately **10.5 kWh of flexible loads could use solar** and about **6 kWh of demand could be shifted**, though actual results depend on cloud cover, panel output, battery capacity, and appliance consumption. It is a forecast-based schedule, not a guarantee.\n\nUse delayed-start functions or smart plugs, but only run appliances unattended if their manuals allow it. Run full loads and use eco modes where practical [tip_device_best_practices.txt]. Forecast-based scheduling and preserving a battery reserve are also recommended [tip_energy_storage_optimization.txt].",
+    "tool_calls": [
+      "get_personalized_tomorrow_plan",
+      "search_energy_tips"
+    ],
+    "tool_trace": [
+      {
+        "tool": "get_personalized_tomorrow_plan",
+        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"confidence\": \"high\", \"data_inputs\": {\"weather_source\": \"Open Meteo\", \"forecast_solar_window\": \"09:00\u201319:00\", \"recommended_flexible_load_window\": \"09:00\u201316:00\", \"off_peak_window\": \"00:00\u201306:00\", \"peak_window\": \"16:00\u201321:00\", \"quiet_hours\": [\"22:00\", \"07:00\"], \"ev_departure_time\": \"07:30\"}, \"plan\": [{\"device\": \"EV charger\", \"window\": \"00:00\u201306:00\", \"action\": \"Charge up to 16.0 kWh before 07:30\", \"why\": \"uses the cheapest available grid period before the departure deadline\"}, {\"device\": \"Flexible appliances\", \"window\": \"09:00\u201316:00\", \"action\": \"Run dishwasher, washing, or water heating during this window\", \"why\": \"matches the strongest forecast solar period while staying outside quiet hours\"}, {\"device\": \"HVAC\", \"window\": \"09:00\u201316:00\", \"action\": \"Preheat or precool within 20.0\u201323.0\u00b0C\", \"why\": \"uses lower cost daytime energy without giving up comfort\"}, {\"device\": \"Home battery\", \"window\": \"16:00\u201321:00\", \"action\": \"Keep 25% in reserve and use stored energy during peak hours\", \"why\": \"reduces exposure to the highest grid price period\"}], \"estimated_impact\": {\"shifted_energy_kwh\": 6.0, \"estimated_flexible_load_solar_kwh\": 10.5, \"car"
+      },
+      {
+        "tool": "search_energy_tips",
+        "output_preview": "{\"query\": \"increase rooftop solar self-consumption tomorrow schedule flexible appliances EV battery water heating dishwasher washing machine\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.529, \"keyword_score\": 0.333, \"hybrid_score\": 0.48}, {\"rank\": 2, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support de"
       }
     ],
     "expected_tools": [
@@ -320,48 +314,51 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 86.0,
+      "relevance": 94.0,
+      "completeness": 88.0,
+      "usefulness": 91.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer directly provides several actionable load-shifting measures: laundry, dishwasher, water heating, HVAC pre-conditioning, EV charging, and battery use.",
+        "It is well anchored to a stated forecast window, distinguishing the broader 09:00\u201319:00 solar period from the recommended 09:00\u201316:00 period and addressing the evening 16:00\u201321:00 period.",
+        "It appropriately balances self-consumption with constraints such as a 07:30 EV departure, a 25% battery reserve, comfort limits of 20\u201323\u00b0C, appliance safety, and uncertainty from weather and system performance.",
+        "The schedule is practical for a Berlin household, but it assumes the household has an EV, battery, controllable water heating, and appliances with delayed-start capability. These should be framed more explicitly as conditional options rather than universally applicable actions, especially because the question does not establish that equipment exists or that the household has a time-of-use tariff or export compensation arrangement."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 100.0,
+      "feedback": [
+        "The personalized tomorrow plan is an appropriate combined route because it incorporates forecast solar timing, electricity pricing, and user-specific constraints into actionable scheduling.",
+        "The plan directly answers how to increase solar self-consumption by recommending flexible loads such as EV charging, appliances, and HVAC during 09:00\u201316:00, plus battery use during peak hours.",
+        "The energy-tips search is relevant supporting evidence and reinforces the recommendation to shift flexible loads toward the middle of the solar window.",
+        "No evidence is genuinely missing: separate weather and electricity-price calls were unnecessary because the personalized plan already supplied those inputs and recommendations."
+      ],
       "actual_tools": [
         "get_personalized_tomorrow_plan",
         "search_energy_tips"
       ],
-      "tool_appropriateness": 100.0,
-      "tool_completeness": 50.0,
-      "feedback": [
-        "Missing expected tools: get_electricity_prices, get_weather_forecast"
-      ]
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:14:41.381917"
+    "timestamp": "2026-08-12T09:42:32.208236"
   },
   {
     "test_id": "history_reduction",
     "question": "Suggest three ways I can reduce energy use based on my usage history.",
-    "final_response": "**Recommendation:** Focus first on your **EV**, then HVAC, then appliances\u2014together they account for nearly all of your recent electricity use.\n\nBased on the latest **30 days (720 hours)**:\n\n1. **Optimize EV charging \u2014 1,394.8 kWh, about 58% of usage**\n   - Charge mainly during **00:00\u201306:00**, when the current Berlin rate is \u20ac0.24/kWh, or around midday when solar output is strong.\n   - Avoid **16:00\u201320:00**, the \u20ac0.46/kWh peak period.\n   - Set charging to finish by your **07:30 departure**, rather than charging immediately after arriving home.\n   - If possible, reduce EV consumption through smoother driving, correct tire pressure, and cabin preconditioning while plugged in.  \n   Source: [tip_device_best_practices.txt]\n\n2. **Tune HVAC operation \u2014 542.4 kWh, about 22% of usage**\n   - Keep settings within your preferred **20\u201323\u00b0C** range, but avoid heating or cooling empty rooms.\n   - Use a modest overnight setback rather than large temperature swings, and close doors to unused rooms.\n   - Review HVAC schedules seasonally; your recent usage suggests this is your second-largest controllable load.  \n   Source: [tip_seasonal_energy_management.txt]\n\n3. **Consolidate and shift appliance use \u2014 481.8 kWh, about 20% of usage**\n   - Run dishwashers, washing machines, and dryers only with full loads.\n   - Use delayed start for **00:00\u201306:00** or for sunny midday periods, and avoid **16:00\u201320:00**.\n   - Where safe and supported by the manufacturer, use smart scheduling\u2014but do not run appliances unattended if the manual advises against it.  \n   Source: [tip_smart_home_automation.txt]\n\nYour solar generation was **434.4 kWh** over the same period, so shifting flexible loads\u2014especially EV charging and appliances\u2014toward solar hours could help you use more of your own production. These recommendations are based on consumption patterns, not a guaranteed energy or cost saving.",
+    "final_response": "**The biggest opportunities in your last 30 days are HVAC, appliances, and EV charging.** Together, they account for nearly all of your **2,448 kWh** consumption:\n\n1. **Reduce HVAC demand without sacrificing comfort**\n   - HVAC used **547.84 kWh**, about **22%** of your total.\n   - Use the lower end of your preferred comfort range\u2014around **20\u00b0C**\u2014when rooms are occupied, and reduce heating modestly overnight or when away.\n   - Keep filters clean and radiators unobstructed; avoid repeatedly switching a heat pump fully off and on.\n   - Source: programmable temperature setbacks and steady adjustments are recommended in **[tip_hvac_optimization.txt]**.\n\n2. **Cut appliance consumption through full loads and eco settings**\n   - Appliances used **485.93 kWh**, about **20%**.\n   - Run the dishwasher and washing machine only when full, use eco or cold cycles, and skip heated drying when practical.\n   - Turn off standby loads with power strips, especially entertainment and office equipment.\n   - Sources: **[tip_device_best_practices.txt]** and **[tip_energy_savings.txt]**.\n\n3. **Make EV charging and driving more efficient**\n   - The EV used **1,414.48 kWh**, about **58%**\u2014your largest category.\n   - Charge only the amount needed for the next trips, maintain correct tire pressure, use gentler acceleration, and limit unnecessary cabin preheating or cooling.\n   - Solar use can reduce grid purchases, but charging from solar does not itself reduce the EV\u2019s underlying energy requirement.\n   - Your solar generated **437.43 kWh** during this period, so when charging is flexible, prioritize your own solar rather than grid electricity.\n\nThese recommendations are based on category totals; the available summary does not show which specific appliances or time periods caused the highest usage, so I have not assumed a precise euro saving.",
     "tool_calls": [
       "get_recent_energy_summary",
-      "search_energy_tips",
-      "get_electricity_prices"
+      "search_energy_tips"
     ],
     "tool_trace": [
       {
         "tool": "get_recent_energy_summary",
-        "output_preview": "{\"time_period_hours\": 720, \"usage\": {\"total_consumption_kwh\": 2418.91, \"total_cost_eur\": 716.87, \"device_breakdown\": {\"EV\": {\"consumption_kwh\": 1394.77, \"cost_eur\": 358.73, \"records\": 699}, \"HVAC\": {\"consumption_kwh\": 542.35, \"cost_eur\": 190.94, \"records\": 699}, \"appliance\": {\"consumption_kwh\": 481.8, \"cost_eur\": 167.2, \"records\": 699}}}, \"generation\": {\"total_generation_kwh\": 434.4, \"latest_weather_condition\": \"sunny\"}}"
+        "output_preview": "{\"time_period_hours\": 720, \"usage\": {\"total_consumption_kwh\": 2448.25, \"total_cost_eur\": 613.1, \"device_breakdown\": {\"EV\": {\"consumption_kwh\": 1414.48, \"cost_eur\": 307.72, \"records\": 706}, \"HVAC\": {\"consumption_kwh\": 547.84, \"cost_eur\": 162.88, \"records\": 706}, \"appliance\": {\"consumption_kwh\": 485.93, \"cost_eur\": 142.5, \"records\": 706}}}, \"generation\": {\"total_generation_kwh\": 437.43, \"latest_weather_condition\": \"partly_cloudy\"}}"
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"reduce household energy use EV charging HVAC heating cooling appliance scheduling and solar self-consumption\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in late spring and summer, and more heating demand in autumn and winter. Review schedules at the beginning of each season rather than relying on one year round routine.\\n\\nIn winter, protect comfort first and look for small changes such as lower overnight heating, full appliance loads, and off peak charging. In summer, use shade, ventilation, and pre cooling to reduce late afternoon cooling demand.\\n\\nTrack weekly energy cost and solar generation. The pattern is more useful than a single unusual day.\", \"source\": \"tip_seasonal_energy_management.txt\", \"citation\": \"[tip_seasonal_energy_management.txt]\", \"semantic_score\": 0.472, \"keyword_score\": 0.643, \"hybrid_score\": 0.515}, {\"rank\": 2, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, wat"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "output_preview": "{\"query\": \"reduce household electricity use based on appliance, heating, and standby consumption patterns\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Seal air leaks around windows and doors with weatherstripping or caulk. Add insulation to attics and walls to reduce heating and cooling needs.\\n\\nUse power strips to easily turn off multiple devices at once. Many electronics continue to draw power even when turned off, known as phantom load.\\n\\nConsider energy-efficient appliances when replacing old ones. Look for ENERGY STAR certified products that use 10-50% less energy than standard models.\\n\\nPlant trees or install awnings to provide shade for your home during summer months. This can reduce cooling costs by up to 25%.\", \"source\": \"tip_energy_savings.txt\", \"citation\": \"[tip_energy_savings.txt]\", \"semantic_score\": 0.37, \"keyword_score\": 0.364, \"hybrid_score\": 0.368}, {\"rank\": 2, \"content\": \"Saving energy at home can be simple and effective. Turn off lights when not in use and unplug devices that draw standby power. Use natural lighting during the day and replace incandescent bulbs with energy-efficient"
       }
     ],
     "expected_tools": [
@@ -369,32 +366,37 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 88.0,
+      "relevance": 94.0,
+      "completeness": 90.0,
+      "usefulness": 91.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer gives exactly three distinct, actionable suggestions and clearly ties each to observed usage: HVAC (22%), appliances (20%), and EV charging (58%), with totals summing appropriately to the stated 2,448 kWh.",
+        "It directly addresses the request and appropriately prioritizes the largest category, EV charging. The advice is generally practical for a Berlin household, including temperature setbacks, appliance eco cycles, standby reduction, tire pressure, and solar self-consumption.",
+        "The answer is commendably cautious about the limits of category-level data and does not invent precise savings or claim that solar charging reduces the EV\u2019s underlying energy use.",
+        "The cited source filenames support the advice in principle, but the answer provides no quotations, links, or specific evidence from those sources. If the sources are not available to the customer, the citations are not independently verifiable. It would be stronger to state the relevant source guidance or provide accessible references, especially for the heat-pump advice and temperature recommendations in a Berlin context."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
+      "tool_appropriateness": 100.0,
+      "tool_completeness": 100.0,
+      "feedback": [
+        "Both tools were directly relevant and sufficient: the recent usage summary provides the user's consumption history and identifies EV, HVAC, and appliance loads, while the energy-tips search provides actionable reduction strategies.",
+        "No required evidence is missing. The advisor can derive three recommendations, such as reducing or shifting EV charging, improving HVAC efficiency through air sealing/insulation or thermostat management, and reducing appliance/standby consumption."
+      ],
       "actual_tools": [
-        "get_electricity_prices",
         "get_recent_energy_summary",
         "search_energy_tips"
       ],
-      "tool_appropriateness": 66.7,
-      "tool_completeness": 100.0,
-      "feedback": [
-        "Additional tools used: get_electricity_prices"
-      ]
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:14:58.226071"
+    "timestamp": "2026-08-12T09:42:54.260294"
   },
   {
     "test_id": "hvac_history",
     "question": "From 2026-07-14 through 2026-08-12, what does my HVAC usage history suggest about reducing evening costs?",
-    "final_response": "**Recommendation:** Shift some cooling demand out of **17:00\u201320:00**, especially by pre-cooling during the day and using shading. Your history shows this is the clearest evening-cost opportunity; keep the home within your preferred **20\u201323\u00b0C** range rather than switching the heat pump fully off and back on.\n\n### What your history shows\n\nFor **14 July\u201312 August 2026**, your HVAC/heat-pump use was:\n\n- **559.13 kWh**\n- **\u20ac197.07 total**\n- About **18.6 kWh/day**\n\nA repeated daily pattern is visible:\n\n- **17:00\u201320:00:** roughly **1.2\u20131.35 kWh per hour**, with costs commonly around **\u20ac0.52\u2013\u20ac0.63/hour**.\n- **21:00 onward:** consumption drops to roughly **0.6 kWh/hour**, and the hourly cost is usually about **\u20ac0.17\u2013\u20ac0.20**.\n- The evening block therefore appears to use approximately **4.8\u20135.2 kWh/day**, costing around **\u20ac2.1\u2013\u20ac2.4/day**\u2014about **\u20ac65\u2013\u20ac72 over this period**.\n\nThis suggests the expensive evening use is not just a brief spike: it is a consistent four-hour operating pattern.\n\n### Practical reduction strategy\n\n1. **Pre-cool before the peak**, ideally around **13:00\u201316:00**, using available rooftop solar where possible.  \n2. From **17:00\u201320:00**, raise the cooling target modestly\u2014about **0.5\u20131\u00b0C**, while staying comfortable.  \n3. **Close blinds or shutters before the afternoon sun** and ventilate later when outdoor temperatures fall.  \n4. Avoid repeatedly turning the heat pump completely off and on; a steady, modest adjustment is generally preferable for comfort and heat-pump operation.\n\nIf you reduced that evening HVAC block by about **20%**\u2014approximately **30 kWh over the period**\u2014at an estimated historical evening rate of **\u20ac0.46/kWh**, the calculator estimates about **\u20ac13.80 saved** for this 30-day period. This is an estimate, not a guaranteed saving; the actual result depends on weather, indoor temperature, solar self-consumption, and how much cooling can be shifted rather than eliminated.\n\nThe recommendation is consistent with the retrieved guidance on pre-cooling, shading, and avoiding aggressive thermostat swings [tip_hvac_optimization.txt] and [tip_seasonal_energy_management.txt].",
+    "final_response": "**Recommendation:** Shift some HVAC conditioning out of the 17:00\u201320:00 Berlin window\u2014ideally by gently pre-cooling or pre-heating around 14:00\u201316:00, then use a modest evening setback rather than switching the heat pump off. Your history shows this is the clearest evening-cost opportunity.\n\n### What the history shows\n\nFrom **14 July through 12 August 2026**:\n\n- HVAC/heat-pump use: **559.13 kWh**\n- Recorded HVAC cost: **\u20ac166.64**\n- The system repeatedly rises from roughly **0.6\u20130.7 kWh/hour** during the daytime to about **1.15\u20131.35 kWh/hour from 17:00\u201320:00**.\n- At **21:00**, usage drops back near **0.6 kWh/hour**, suggesting a recurring evening boost or schedule.\n- The 17:00\u201320:00 period appears to account for approximately **150 kWh**, or about **27% of total HVAC energy**, and roughly **\u20ac55\u2013\u20ac65** of the recorded cost. This is an estimate from the hourly pattern, not a separately returned database total.\n\nThe pattern is consistent across nearly the whole period, so it looks like a schedule or repeated comfort response rather than an isolated hot day.\n\n### Practical schedule to test\n\nFor cooling:\n\n- **14:00\u201316:00:** pre-cool gently, preferably when rooftop solar is available.\n- **16:00\u201320:00:** raise the cooling setpoint slightly within your comfort range, for example by **0.5\u20131\u00b0C**, while keeping indoor temperature acceptable.\n- **After 21:00:** return to your normal setting if needed; your system already uses substantially less energy then.\n\nFor heating, use the equivalent approach in winter: modestly warm the home before the expensive evening period and avoid a large recovery cycle during 17:00\u201320:00.\n\nAs an illustration, if the evening load were reduced by **20%**\u2014about 30 kWh over this period\u2014at an assumed \u20ac0.40/kWh, the calculator estimates **\u20ac12** saved over the 30-day period. Actual savings depend on how much load can be avoided, the tariff, weather, and whether pre-conditioning merely shifts consumption rather than reducing it.\n\nKeep changes modest: your saved comfort range is **20\u201323\u00b0C**, and heat pumps generally work better with steady adjustments than repeated full shutoffs. This matches the guidance to use pre-cooling, shading, and modest thermostat changes [tip_hvac_optimization.txt]. Seasonal scheduling and late-afternoon cooling reduction are also recommended [tip_seasonal_energy_management.txt].",
     "tool_calls": [
       "query_energy_usage",
       "search_energy_tips",
@@ -403,15 +405,15 @@
     "tool_trace": [
       {
         "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"HVAC\", \"total_records\": 720, \"total_consumption_kwh\": 559.13, \"total_cost_eur\": 197.07, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.136}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.155}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.572, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.137}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.141}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.585, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.14}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.141}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 1.135, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.363}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 1.356, \"device_type\": \"HVAC\", \"devic"
+        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"HVAC\", \"total_records\": 720, \"total_consumption_kwh\": 559.13, \"total_cost_eur\": 166.64, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.115}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.131}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.572, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.116}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.585, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 1.135, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.306}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 1.356, \"device_type\": \"HVAC\", \"devi"
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"reduce evening HVAC electricity costs in summer Berlin: pre-cooling, thermostat settings, ventilation, and shifting cooling to solar hours\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"HVAC Optimization for Berlin Homes\\n\\nUse a programmable thermostat to reduce heating or cooling when rooms are empty. In winter, set a lower temperature overnight and warm the home shortly before people wake up. In summer, pre cool during lower cost hours if a hot afternoon is expected.\\n\\nKeep filters clean, avoid blocking radiators, and close blinds on sunny summer afternoons. Small changes work best when they are paired with a comfortable temperature range rather than aggressive temperature swings.\\n\\nFor a heat pump, avoid repeatedly turning the system fully off and on. A steady, modest adjustment usually uses less energy and protects comfort.\", \"source\": \"tip_hvac_optimization.txt\", \"citation\": \"[tip_hvac_optimization.txt]\", \"semantic_score\": 0.599, \"keyword_score\": 0.562, \"hybrid_score\": 0.59}, {\"rank\": 2, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in la"
+        "output_preview": "{\"query\": \"reduce HVAC evening electricity costs while maintaining comfort, pre-cooling and thermostat scheduling\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"HVAC Optimization for Berlin Homes\\n\\nUse a programmable thermostat to reduce heating or cooling when rooms are empty. In winter, set a lower temperature overnight and warm the home shortly before people wake up. In summer, pre cool during lower cost hours if a hot afternoon is expected.\\n\\nKeep filters clean, avoid blocking radiators, and close blinds on sunny summer afternoons. Small changes work best when they are paired with a comfortable temperature range rather than aggressive temperature swings.\\n\\nFor a heat pump, avoid repeatedly turning the system fully off and on. A steady, modest adjustment usually uses less energy and protects comfort.\", \"source\": \"tip_hvac_optimization.txt\", \"citation\": \"[tip_hvac_optimization.txt]\", \"semantic_score\": 0.496, \"keyword_score\": 0.538, \"hybrid_score\": 0.507}, {\"rank\": 2, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in late spring and summer, and more heat"
       },
       {
         "tool": "calculate_energy_savings",
-        "output_preview": "{\"device_type\": \"HVAC\", \"current_usage_kwh\": 150.0, \"optimized_usage_kwh\": 120.0, \"energy_savings_kwh\": 30.0, \"current_price_eur_per_kwh\": 0.46, \"optimized_price_eur_per_kwh\": 0.46, \"current_cost_eur\": 69.0, \"optimized_cost_eur\": 55.2, \"savings_eur\": 13.8, \"savings_percentage\": 20.0, \"annual_savings_eur\": 5037.0}"
+        "output_preview": "{\"device_type\": \"HVAC\", \"current_usage_kwh\": 150.0, \"optimized_usage_kwh\": 120.0, \"energy_savings_kwh\": 30.0, \"current_price_eur_per_kwh\": 0.4, \"optimized_price_eur_per_kwh\": 0.4, \"current_cost_eur\": 60.0, \"optimized_cost_eur\": 48.0, \"savings_eur\": 12.0, \"savings_percentage\": 20.0, \"annual_savings_eur\": 4380.0}"
       }
     ],
     "expected_tools": [
@@ -420,32 +422,40 @@
       "calculate_energy_savings"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 78.0,
+      "relevance": 92.0,
+      "completeness": 88.0,
+      "usefulness": 90.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer directly uses the requested 2026-07-14 through 2026-08-12 period and identifies a concrete action: modestly reduce HVAC conditioning during 17:00\u201320:00, with pre-conditioning earlier in the day.",
+        "It provides actionable timing, a 0.5\u20131\u00b0C adjustment, and appropriately cautions against switching a heat pump off entirely.",
+        "The quantified estimate is clearly labeled as illustrative and assumption-dependent, which is good. However, the \u20ac0.40/kWh rate is not established from the stated history, and the claimed 20% reduction is hypothetical rather than demonstrated by the data.",
+        "The reported 150 kWh evening total and \u20ac55\u2013\u20ac65 cost estimate need stronger evidentiary support: the answer says they are inferred from an hourly pattern, but does not show the underlying aggregation, tariff structure, or whether the period contains exactly 30 days of comparable hourly data. The \u20ac166.64 total cost also implies an average rate that may not match the assumed \u20ac0.40/kWh, so the cost estimates could be internally inconsistent depending on tariff details and fixed or time-varying charges."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "calculate_energy_savings",
-        "query_energy_usage",
-        "search_energy_tips"
-      ],
       "tool_appropriateness": 100.0,
-      "tool_completeness": 100.0,
+      "tool_completeness": 85.0,
       "feedback": [
-        "The expected tools were used without extras."
-      ]
+        "All three selected tools are semantically appropriate: historical HVAC usage establishes the evening pattern, energy tips provide practical scheduling guidance, and savings calculation estimates the financial impact.",
+        "The usage query covers the requested date range and HVAC device, while the tips specifically address pre-cooling, thermostat scheduling, and avoiding aggressive heat-pump cycling.",
+        "The savings calculation is relevant but appears generic (150 to 120 kWh at \u20ac0.40/kWh) rather than derived from the queried 559.13 kWh and \u20ac166.64 history or specifically from evening usage. A more tailored calculation would improve completeness.",
+        "No genuinely required evidence route is missing. Current electricity prices or hourly weather could further refine the recommendation, but they are not necessary for answering what the usage history suggests."
+      ],
+      "actual_tools": [
+        "query_energy_usage",
+        "search_energy_tips",
+        "calculate_energy_savings"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:15:18.169367"
+    "timestamp": "2026-08-12T09:43:26.071889"
   },
   {
     "test_id": "battery",
     "question": "How should I charge and use a home battery over the next two days?",
-    "final_response": "**Recommendation:** Keep the battery at least **25% charged**, prioritize **solar charging from roughly 09:00\u201316:00**, and discharge it during Berlin\u2019s expensive **16:00\u201320:00 peak** on both days. Avoid routine grid charging unless the battery is too low to cover the evening.\n\n### 12 August\n- **06:00\u201309:00:** Let the battery support essential household loads, but preserve the 25% reserve.\n- **09:00\u201316:00:** Charge from surplus solar. Solar is especially strong from **10:00\u201316:00**, so run flexible appliances directly from solar where possible rather than cycling the battery.\n- **16:00\u201320:00:** Discharge the battery to reduce grid purchases at **\u20ac0.46/kWh**.\n- **20:00\u201323:00:** Use remaining battery only if needed; grid prices fall to **\u20ac0.30/kWh**.\n- **00:00\u201306:00:** Grid power is cheapest at **\u20ac0.24/kWh**, but do not charge from the grid unless your battery is below the level needed for the next evening.\n\n### 13 August\n- The early morning is less reliable\u2014forecast conditions include overcast skies around **04:00\u201305:00**\u2014but solar becomes strong from **09:00 onward**.\n- Use the same strategy: preserve the reserve overnight, then charge with solar mainly **09:00\u201316:00**.\n- Discharge during **16:00\u201320:00**, when electricity again costs **\u20ac0.46/kWh**.\n- If the battery is unusually low before dawn, a limited top-up between **00:00 and 06:00** is preferable to buying electricity during the peak period.\n\nThe forecast is broadly sunny on both days, with solar irradiance peaking around **12:00\u201315:00**, so there is little reason to fill the battery from the grid in advance. Because the battery\u2019s capacity, current state of charge, efficiency, and export tariff are unknown, this is a timing recommendation rather than a guaranteed saving. Avoid cycling for very small price differences after charging losses, as advised in **[tip_energy_storage_optimization.txt]**.",
+    "final_response": "**Recommendation:** Keep the battery in **solar-priority mode**, charge it mainly from midday solar, and discharge it during Berlin\u2019s **16:00\u201320:00 peak-price period** while maintaining the **25% reserve**.\n\n### Today \u2014 Wednesday, 12 August\n\n- **10:00\u201315:00:** Let surplus solar charge the battery; solar irradiance is forecast to be strongest around **11:00\u201316:00**.\n- **16:00\u201320:00:** Use the battery for household loads instead of grid electricity. Grid prices are **\u20ac0.385/kWh**, the day\u2019s highest.\n- **21:00\u201323:00:** Prefer grid power if needed rather than deeply cycling the battery; the rate falls to **\u20ac0.251/kWh**.\n- **00:00\u201306:00:** Avoid grid-charging unless the battery is below the reserve or you need extra energy for the morning. Off-peak electricity is **\u20ac0.201/kWh**, but tomorrow\u2019s solar forecast is also strong.\n\n### Tomorrow \u2014 Thursday, 13 August\n\n- **00:00\u201306:00:** Keep grid charging off by default; electricity is **\u20ac0.209/kWh**.\n- **07:00\u201310:00:** Use the battery only as needed, especially if morning demand is high.\n- **10:00\u201315:00:** Leave room for and prioritize solar charging. Irradiance is forecast to be strong, particularly around **11:00\u201316:00**.\n- **16:00\u201320:00:** Discharge the battery to cover loads during the **\u20ac0.401/kWh** peak period\u2014the highest rate across these two days.\n- **After 21:00:** Switch back to grid power when necessary, while preserving the 25% reserve.\n\nBecause both days are forecast to be clear and sunny, **solar charging is preferable to buying grid energy overnight**. If the battery is already nearly full, use flexible loads\u2014such as EV charging or appliances\u2014during **11:00\u201315:00** to create space for more solar generation.\n\nThese timings assume your battery can be scheduled by time-of-use period and that \u201csolar priority\u201d does not override the reserve setting. Avoid cycling the battery for small price differences after round-trip losses; the large **16:00\u201320:00** price premium makes discharge there worthwhile. [tip_energy_storage_optimization.txt] [tip_renewable_energy_integration.txt]",
     "tool_calls": [
       "get_weather_forecast",
       "get_electricity_prices",
@@ -455,11 +465,11 @@
     "tool_trace": [
       {
         "tool": "get_weather_forecast",
-        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 2, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T02:00\", \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 15.2, \"condition\": \"clear_sky\", \"humidity_percent\": 61, \"wind_speed_kmh\": 4.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.8, \"condition\": \"clear_sky\", \"humidity_percent\": 62, \"wind_speed_kmh\": 3.3, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"hou"
+        "output_preview": "{\"location\": \"Berlin, Germany\", \"coordinates\": {\"latitude\": 52.52437, \"longitude\": 13.41053}, \"forecast_days\": 2, \"timezone\": \"Europe/Berlin\", \"data_source\": \"Open Meteo\", \"fallback\": false, \"current\": {\"time\": \"2026-08-12T09:30\", \"temperature_c\": 17.1, \"condition\": \"clear_sky\", \"humidity_percent\": 53, \"wind_speed_kmh\": 4.0, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 473.0}, \"hourly\": [{\"time\": \"2026-08-12T00:00\", \"hour\": 0, \"temperature_c\": 16.4, \"condition\": \"clear_sky\", \"humidity_percent\": 58, \"wind_speed_kmh\": 3.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T01:00\", \"hour\": 1, \"temperature_c\": 15.8, \"condition\": \"clear_sky\", \"humidity_percent\": 59, \"wind_speed_kmh\": 4.1, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T02:00\", \"hour\": 2, \"temperature_c\": 14.9, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 4.6, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T03:00\", \"hour\": 3, \"temperature_c\": 14.3, \"condition\": \"clear_sky\", \"humidity_percent\": 64, \"wind_speed_kmh\": 3.8, \"cloud_cover_percent\": 0, \"solar_irradiance_w_m2\": 0.0}, {\"time\": \"2026-08-12T04:00\", \"h"
       },
       {
         "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.201, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.268, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.293, \"period\": \"standard\", \"demand_charge_e"
       },
       {
         "tool": "get_user_preferences",
@@ -467,11 +477,11 @@
       },
       {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"home battery scheduling solar self-consumption time-of-use charging reserve\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Home Battery and Energy Storage\\n\\nCharge a home battery when expected solar production is strong or when the grid price is low. Keep a reserve for essential loads instead of always draining the battery during the most expensive period.\\n\\nAvoid cycling a battery only for a tiny price difference. A useful automation needs a clear gap between charge and discharge prices after efficiency losses are considered.\\n\\nUse forecast based scheduling: save midday solar for the evening peak when the next day is cloudy, and leave more room for charging when a sunny day is expected.\", \"source\": \"tip_energy_storage_optimization.txt\", \"citation\": \"[tip_energy_storage_optimization.txt]\", \"semantic_score\": 0.549, \"keyword_score\": 0.7, \"hybrid_score\": 0.587}, {\"rank\": 2, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or during periods of "
+        "output_preview": "{\"query\": \"home battery scheduling solar self-consumption charge during low prices preserve reserve\", \"total_results\": 3, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Home Battery and Energy Storage\\n\\nCharge a home battery when expected solar production is strong or when the grid price is low. Keep a reserve for essential loads instead of always draining the battery during the most expensive period.\\n\\nAvoid cycling a battery only for a tiny price difference. A useful automation needs a clear gap between charge and discharge prices after efficiency losses are considered.\\n\\nUse forecast based scheduling: save midday solar for the evening peak when the next day is cloudy, and leave more room for charging when a sunny day is expected.\", \"source\": \"tip_energy_storage_optimization.txt\", \"citation\": \"[tip_energy_storage_optimization.txt]\", \"semantic_score\": 0.641, \"keyword_score\": 0.75, \"hybrid_score\": 0.668}, {\"rank\": 2, \"content\": \"Large devices like electric vehicles, washing machines and dishwashers often support delayed start or timer functions. Schedule these devices to run outside of peak electricity pricing hours or duri"
       },
       {
         "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "output_preview": "{\"date\": \"2026-08-13\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_date_aware_time_of_use\", \"pricing_method\": \"Berlin time of use windows adjusted by the selected date's season, weekday, and repeatable daily market factor.\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.209, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.279, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.279, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.305, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.305, \"period\": \"standard\", \"demand_charge_e"
       }
     ],
     "expected_tools": [
@@ -481,67 +491,69 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 91.0,
+      "relevance": 94.0,
+      "completeness": 88.0,
+      "usefulness": 92.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer directly provides an actionable two-day schedule and correctly prioritizes forecast midday solar, especially the 11:00\u201316:00 window, over overnight grid charging given the clear-weather forecast.",
+        "It uses the stated tariffs appropriately: discharge during 16:00\u201320:00, particularly Thursday at \u20ac0.401/kWh and Wednesday at \u20ac0.385/kWh, while avoiding unnecessary cycling during lower-price periods.",
+        "It explicitly preserves the configured 25% reserve and sensibly keeps grid charging off by default, with a caveat for unusually low state of charge or morning needs.",
+        "The recommendation to use flexible loads around 11:00\u201315:00 if the battery is nearly full is practical and supports solar self-consumption, though it should clarify that loads should not be shifted solely to avoid curtailment if the battery can still accommodate expected solar output and household demand is uncertain."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "get_electricity_prices",
-        "get_user_preferences",
-        "get_weather_forecast",
-        "search_energy_tips"
-      ],
       "tool_appropriateness": 100.0,
       "tool_completeness": 100.0,
       "feedback": [
-        "The expected tools were used without extras."
-      ]
+        "All four selected tools are directly relevant: the weather forecast informs expected solar availability, electricity prices identify economical charging and discharge periods, user preferences provide the battery reserve and peak-use constraints, and energy tips supply general scheduling guidance.",
+        "The trace includes price data for both days, despite the first preview showing only the first date, so it supports the requested two-day horizon.",
+        "No essential evidence route is missing. Historical usage or solar-generation data could improve personalization, but neither is required for a sound two-day recommendation."
+      ],
+      "actual_tools": [
+        "get_weather_forecast",
+        "get_electricity_prices",
+        "get_user_preferences",
+        "search_energy_tips"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:15:32.397765"
+    "timestamp": "2026-08-12T09:43:50.544795"
   },
   {
     "test_id": "solar_history",
     "question": "From 2026-07-14 through 2026-08-12, how does my solar generation compare with my consumption and what should I move?",
-    "final_response": "## Recommendation\n\nYour solar generation was **far below consumption** in this period. Move the most flexible loads\u2014especially **EV charging and evening appliances**\u2014into **10:00\u201315:00 Berlin time on sunny or partly cloudy days**. On cloudy/rainy days, use the cheaper **00:00\u201306:00 off-peak window** instead.\n\n## Period comparison: 14 July\u201312 August 2026\n\n| Measure | Energy |\n|---|---:|\n| Total consumption | **2,476.91 kWh** |\n| Solar generation | **452.52 kWh** |\n| Net shortfall before storage/export effects | **2,024.39 kWh** |\n| Solar as a share of consumption | **18.3%** |\n| Average per day | **82.56 kWh consumed vs. 15.08 kWh solar** |\n\nSo, in aggregate, your solar could cover about **18% of consumption** if it were perfectly used on-site. Actual self-consumption may be lower if generation was exported or unavailable when loads were running. Your recorded electricity cost for consumption was **\u20ac735.56**.\n\n### Where the consumption went\n\n- **EV:** 1,421.04 kWh \u2014 **57.4%**\n- **HVAC/heat pump:** 559.13 kWh \u2014 **22.6%**\n- **Flexible appliances:** 496.73 kWh \u2014 **20.1%**\n\nThe EV is the clearest opportunity. Your history shows substantial EV charging between **00:00 and 05:00**, while solar production was concentrated roughly between **07:00 and 17:00**, peaking around **11:00\u201313:00**.\n\n## What to move\n\n1. **EV charging \u2014 highest priority**\n   - On sunny days: schedule the main charging block around **10:00\u201314:00**, extending to **15:00** if needed.\n   - On partly cloudy days: use **11:00\u201314:00** when generation is strongest, with off-peak backup.\n   - On rainy or heavily overcast days: use **00:00\u201306:00** rather than waiting for weak solar.\n   - Because your departure preference is **07:30**, do not rely on same-morning solar. Charge the required amount the previous day or overnight.\n\n2. **Dishwasher, washing machine and other flexible appliances**\n   - Move the evening concentration around **19:00\u201321:00** to **11:00\u201315:00** on good-solar days.\n   - Run full loads and use eco modes; avoid moving tasks to the evening peak, which is **16:00\u201320:00 at \u20ac0.46/kWh** in the retrieved Berlin tariff pattern.\n   - If solar is weak, use **00:00\u201306:00 at \u20ac0.24/kWh** instead.\n\n3. **Heat pump/HVAC**\n   - Shift only flexible heating or cooling\u2014not comfort-critical operation\u2014to approximately **10:00\u201315:00** on sunny days.\n   - Pre-condition modestly within your preferred **20\u201323\u00b0C** range, then reduce operation during the **16:00\u201320:00** peak where practical.\n   - Your HVAC consumption is substantial, but it should be adjusted conservatively to avoid discomfort.\n\n4. **Battery**\n   - On sunny days, leave room for midday solar and charge from solar first.\n   - Preserve your **25% reserve**.\n   - On cloudy forecast days, use stored solar for the evening peak rather than discharging early; avoid cycling for small price differences.\n\nThe practical guidance is consistent with EcoHome\u2019s recommendations to use solar first for flexible daytime loads and fall back to off-peak charging when solar is weak [tip_renewable_energy_integration.txt], and to use delayed starts for EVs and appliances [tip_device_best_practices.txt].",
+    "final_response": "**Recommendation:** Move the EV\u2019s large charging blocks and evening flexible-appliance use into the **10:00\u201315:00 Berlin time solar window** whenever the day is sunny or partly cloudy. Keep an overnight fallback for days when the EV must be ready by **07:30** or solar is weak.\n\n### Period comparison: 14 July\u201312 August 2026\n\n| Measure | Energy |\n|---|---:|\n| Solar generation | **452.52 kWh** |\n| Household consumption | **2,476.91 kWh** |\n| Solar relative to consumption | **18.3%** |\n| Consumption not covered by generation, on an energy-total basis | **2,024.39 kWh** |\n| Average per day | **15.08 kWh solar** vs. **82.56 kWh consumption** |\n\nThis is an energy-total comparison, not a measured self-consumption rate: the history does not show how much solar was used directly, stored, exported, or curtailed.\n\n### What to move\n\n1. **EV charging \u2014 highest priority**\n   - EV use was **1,421.04 kWh**, or about **57.4%** of household consumption.\n   - Your history shows substantial charging concentrated around **00:00\u201306:00**, while solar is available later.\n   - On suitable days, shift the main charging block to **10:00\u201315:00**, ideally around **11:00\u201314:00**.\n   - If the EV must be ready at 07:30, do not rely solely on daytime charging. Use **23:00\u201306:00** as the fallback, or charge only the required amount overnight and top up during solar hours when possible.\n\n2. **Flexible appliances**\n   - Appliances used **496.73 kWh**, about **20.1%** of total consumption.\n   - Your usage is notably higher in the evening, roughly **19:00\u201321:00**. Move dishwashing, laundry, and other delayed-start loads to **10:00\u201315:00**, preferably **11:00\u201314:00**.\n   - Run full loads and avoid starting several high-power devices simultaneously if the inverter or battery has a power limit.\n\n3. **HVAC / heat pump**\n   - HVAC used **559.13 kWh**, about **22.6%**.\n   - It also has recurring morning and evening peaks. Shift only flexible heating or cooling: gently preheat or pre-cool around **11:00\u201315:00**, while keeping your preferred **20\u201323\u00b0C** comfort range.\n   - Avoid switching HVAC off abruptly; comfort and recovery energy can outweigh the benefit.\n\n4. **Battery, if available**\n   - Preserve the **25% reserve**.\n   - On sunny days, prioritize direct daytime loads first. On cloudy days, retain more midday solar for the evening rather than discharging early.\n\nThese priorities follow the retrieved guidance to use solar first for flexible daytime loads and to use overnight charging when solar is weak [tip_renewable_energy_integration.txt], while delayed-start devices should be scheduled during high-generation or off-peak periods [tip_device_best_practices.txt].",
     "tool_calls": [
-      "query_energy_usage",
       "query_solar_generation",
-      "search_energy_tips",
-      "get_electricity_prices"
+      "query_energy_usage",
+      "search_energy_tips"
     ],
     "tool_trace": [
-      {
-        "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": null, \"total_records\": 2160, \"total_consumption_kwh\": 2476.91, \"total_cost_eur\": 735.56, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 7.127, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.71}, {\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.136}, {\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.136}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 6.151, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.476}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.155}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.592, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.142}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 7.72, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.853}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_k"
-      },
       {
         "tool": "query_solar_generation",
         "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"total_records\": 390, \"total_generation_kwh\": 452.52, \"average_daily_generation_kwh\": 15.08, \"records\": [{\"timestamp\": \"2026-07-14T06:00:00\", \"generation_kwh\": 0.0, \"weather_condition\": \"sunny\", \"temperature_c\": 7.4, \"solar_irradiance_w_m2\": 0.0}, {\"timestamp\": \"2026-07-14T07:00:00\", \"generation_kwh\": 0.748, \"weather_condition\": \"sunny\", \"temperature_c\": 6.4, \"solar_irradiance_w_m2\": 136.7}, {\"timestamp\": \"2026-07-14T08:00:00\", \"generation_kwh\": 1.659, \"weather_condition\": \"sunny\", \"temperature_c\": 8.1, \"solar_irradiance_w_m2\": 273.3}, {\"timestamp\": \"2026-07-14T09:00:00\", \"generation_kwh\": 2.526, \"weather_condition\": \"sunny\", \"temperature_c\": 8.5, \"solar_irradiance_w_m2\": 410.0}, {\"timestamp\": \"2026-07-14T10:00:00\", \"generation_kwh\": 2.967, \"weather_condition\": \"sunny\", \"temperature_c\": 6.9, \"solar_irradiance_w_m2\": 546.7}, {\"timestamp\": \"2026-07-14T11:00:00\", \"generation_kwh\": 3.745, \"weather_condition\": \"sunny\", \"temperature_c\": 7.1, \"solar_irradiance_w_m2\": 683.3}, {\"timestamp\": \"2026-07-14T12:00:00\", \"generation_kwh\": 4.577, \"weather_condition\": \"sunny\", \"temperature_c\": 7.1, \"solar_irradiance_w_m2\": 820.0}, {\"timestamp\": \""
       },
       {
+        "tool": "query_energy_usage",
+        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": null, \"total_records\": 2160, \"total_consumption_kwh\": 2476.91, \"total_cost_eur\": 622.33, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 7.127, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.447}, {\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.115}, {\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.115}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 6.151, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.249}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.131}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.592, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.12}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 7.72, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.567}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_k"
+      },
+      {
         "tool": "search_energy_tips",
-        "output_preview": "{\"query\": \"use rooftop solar generation for flexible household loads: dishwasher, laundry, EV charging, and battery scheduling\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.56, \"keyword_score\": 0.5, \"hybrid_score\": 0.545}, {\"rank\": 2, \"content\": \"Home Battery and Energy Storage\\n\\nCharge a home battery when expected solar production is strong or wh"
+        "output_preview": "{\"query\": \"compare household solar generation with consumption and shift flexible loads to solar hours\", \"total_results\": 5, \"retrieval_method\": \"hybrid semantic search with keyword re ranking\", \"tips\": [{\"rank\": 1, \"content\": \"Renewable Energy Integration\\n\\nUse solar electricity first for flexible daytime work. When forecasts show clear or partly cloudy conditions, schedule EV charging, water heating, laundry, and dishwashing near the middle of the day.\\n\\nCloud cover and solar radiation matter more than the weather label alone. A bright partly cloudy day can still provide useful solar power, while a dark overcast day may make low price overnight charging the better choice.\\n\\nIf export payments are low, using solar power in the home can be more valuable than sending it to the grid. Keep enough flexibility to shift non urgent tasks when the forecast changes.\", \"source\": \"tip_renewable_energy_integration.txt\", \"citation\": \"[tip_renewable_energy_integration.txt]\", \"semantic_score\": 0.497, \"keyword_score\": 0.364, \"hybrid_score\": 0.464}, {\"rank\": 2, \"content\": \"Seasonal Energy Management\\n\\nBerlin households usually see more solar opportunity in late spring and summer, and more heati"
       },
       {
         "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"EV\", \"total_records\": 720, \"total_consumption_kwh\": 1421.04, \"total_cost_eur\": 365.9, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 7.127, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.71}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 6.151, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.476}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 7.72, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.853}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 5.697, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.367}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 5.689, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.365}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 6.905, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.657}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 0.199, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 0.064}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 0.159, \"dev"
+        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"EV\", \"total_records\": 720, \"total_consumption_kwh\": 1421.04, \"total_cost_eur\": 309.71, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 7.127, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.447}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 6.151, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.249}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 7.72, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.567}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 5.697, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.156}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 5.689, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.155}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 6.905, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 1.402}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 0.199, \"device_type\": \"EV\", \"device_name\": \"Home EV Charger\", \"cost_eur\": 0.054}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 0.159, \"d"
       },
       {
         "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"appliance\", \"total_records\": 720, \"total_consumption_kwh\": 496.73, \"total_cost_eur\": 172.58, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.136}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.592, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.142}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.575, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.138}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.58, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.139}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.59, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.142}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.586, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.141}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 0.6, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost"
+        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"HVAC\", \"total_records\": 720, \"total_consumption_kwh\": 559.13, \"total_cost_eur\": 166.64, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.115}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.131}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.572, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.116}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.585, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 1.135, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.306}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 1.356, \"device_type\": \"HVAC\", \"devi"
       },
       {
         "tool": "query_energy_usage",
-        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"HVAC\", \"total_records\": 720, \"total_consumption_kwh\": 559.13, \"total_cost_eur\": 197.07, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.136}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.647, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.155}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.572, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.137}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.141}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.585, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.14}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.588, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.141}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 1.135, \"device_type\": \"HVAC\", \"device_name\": \"Heat Pump\", \"cost_eur\": 0.363}, {\"timestamp\": \"2026-07-14T07:00:00\", \"consumption_kwh\": 1.356, \"device_type\": \"HVAC\", \"devic"
-      },
-      {
-        "tool": "get_electricity_prices",
-        "output_preview": "{\"date\": \"2026-08-12\", \"location\": \"Berlin, Germany\", \"timezone\": \"Europe/Berlin\", \"pricing_type\": \"deterministic_time_of_use\", \"currency\": \"EUR\", \"unit\": \"EUR_per_kWh\", \"hourly_rates\": [{\"hour\": 0, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 1, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 2, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 3, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 4, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 5, \"rate_eur_per_kwh\": 0.24, \"period\": \"off_peak\", \"demand_charge_eur\": 0.0}, {\"hour\": 6, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 7, \"rate_eur_per_kwh\": 0.32, \"period\": \"shoulder\", \"demand_charge_eur\": 0.0}, {\"hour\": 8, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 9, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 10, \"rate_eur_per_kwh\": 0.35, \"period\": \"standard\", \"demand_charge_eur\": 0.0}, {\"hour\": 11, \"rate_eur_per_kwh\": 0.35, \"period\": \"stand"
+        "output_preview": "{\"start_date\": \"2026-07-14\", \"end_date\": \"2026-08-12\", \"device_type\": \"appliance\", \"total_records\": 720, \"total_consumption_kwh\": 496.73, \"total_cost_eur\": 145.97, \"records\": [{\"timestamp\": \"2026-07-14T00:00:00\", \"consumption_kwh\": 0.565, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.115}, {\"timestamp\": \"2026-07-14T01:00:00\", \"consumption_kwh\": 0.592, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.12}, {\"timestamp\": \"2026-07-14T02:00:00\", \"consumption_kwh\": 0.575, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.117}, {\"timestamp\": \"2026-07-14T03:00:00\", \"consumption_kwh\": 0.58, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.118}, {\"timestamp\": \"2026-07-14T04:00:00\", \"consumption_kwh\": 0.59, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.12}, {\"timestamp\": \"2026-07-14T05:00:00\", \"consumption_kwh\": 0.586, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_eur\": 0.119}, {\"timestamp\": \"2026-07-14T06:00:00\", \"consumption_kwh\": 0.6, \"device_type\": \"appliance\", \"device_name\": \"Flexible Appliances\", \"cost_e"
       }
     ],
     "expected_tools": [
@@ -550,33 +562,40 @@
       "search_energy_tips"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 88.0,
+      "relevance": 94.0,
+      "completeness": 91.0,
+      "usefulness": 93.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The answer directly compares generation and consumption for the requested dates, with a clear total, percentage, shortfall, and daily averages.",
+        "It identifies EV charging as the highest-priority flexible load and gives an actionable solar-hours window, plus appliance and HVAC options.",
+        "The arithmetic is internally consistent: 452.52/2,476.91 is about 18.3%, and the difference is 2,024.39 kWh; the category percentages also approximately reconcile with total consumption.",
+        "The answer appropriately cautions that the comparison is not a measured self-consumption or grid-import rate, avoiding an important overclaim about how much solar actually served loads. However, it could state more explicitly that generation and consumption totals alone cannot prove that shifting loads will reduce imports without interval-level generation, load, battery, and export data or tariff information."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "get_electricity_prices",
-        "query_energy_usage",
-        "query_solar_generation",
-        "search_energy_tips"
-      ],
-      "tool_appropriateness": 75.0,
+      "tool_appropriateness": 100.0,
       "tool_completeness": 100.0,
       "feedback": [
-        "Additional tools used: get_electricity_prices"
-      ]
+        "The tool choices are fully appropriate: solar generation and total/device-level consumption cover the requested comparison, while energy tips support the recommendation about shifting flexible loads.",
+        "The date range is correctly queried for both generation and consumption. The evidence shows 452.52 kWh generated versus 2,476.91 kWh consumed, so consumption exceeded generation by 2,024.39 kWh; average daily values are about 15.08 kWh versus 82.56 kWh.",
+        "The device-level queries identify useful loads to move: EV charging (1,421.04 kWh) is the largest candidate, followed by flexible appliances (496.73 kWh). HVAC use (559.13 kWh) is generally less flexible, though pre-cooling or other limited daytime adjustments may be possible.",
+        "No required evidence route is missing. The tips search is relevant supporting evidence, and the extra device-specific usage queries are helpful rather than unnecessary."
+      ],
+      "actual_tools": [
+        "query_solar_generation",
+        "query_energy_usage",
+        "search_energy_tips"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:15:56.270011"
+    "timestamp": "2026-08-12T09:44:18.806661"
   },
   {
     "test_id": "personalized_plan",
     "question": "Give me a tomorrow plan that respects my saved EV departure time, comfort range, and battery reserve.",
-    "final_response": "**Tomorrow\u2019s Berlin plan \u2014 Thursday, 13 August**\n\n- **EV:** Charge between **00:00 and 06:00**, for up to **16.0 kWh**, so it is ready before your **07:30 departure**. This uses the expected off-peak period and avoids relying on daytime solar after you leave.\n- **Flexible appliances:** Run the dishwasher, washing machine, and water heating between **09:00 and 16:00**, when solar production is forecast to be strongest.\n- **Heating/cooling:** Preheat or precool during **09:00\u201316:00**, while keeping your home within the preferred **20.0\u201323.0\u00b0C** range.\n- **Battery:** Preserve at least **25% reserve**. Use the remaining stored energy from **16:00\u201321:00**, when grid prices are expected to be highest.\n\nThis plan shifts flexible use toward approximately **10.5 kWh of forecast solar** and avoids about **6 kWh** of peak-period grid use. The estimate corresponds to roughly **2.1 kg CO\u2082e avoided**, using a 350 g/kWh grid-intensity assumption. These are recommendations only; actual results depend on weather, solar output, battery state, and device settings.",
+    "final_response": "## Tomorrow\u2019s plan \u2014 Thursday, 13 August\n\n- **00:00\u201306:00 \u2014 Charge the EV:** Charge up to **16.0 kWh**, completing before your **07:30 departure**. This uses the lowest-cost grid period rather than risking a late charge.\n- **09:00\u201316:00 \u2014 Use solar for flexible loads:** Run the dishwasher, washing machine, and water heating during the forecast solar window. Estimated solar use for flexible loads: **up to 10.5 kWh**.\n- **09:00\u201316:00 \u2014 Manage HVAC:** Preheat or precool as needed, keeping your home within the saved **20.0\u201323.0\u00b0C** comfort range.\n- **16:00\u201321:00 \u2014 Use the battery during peak hours:** Discharge the battery to reduce grid use, but **retain at least 25% reserve**.\n- **22:00\u201307:00 \u2014 Keep quiet hours:** Avoid scheduling noisy appliances overnight except the EV, which is handled in the early off-peak window.\n\nThe forecast shows the strongest solar period from **09:00\u201319:00**, with the best flexible-load window through **16:00**. Avoid shifting discretionary loads into **16:00\u201321:00**, when grid prices are expected to be highest.\n\nThis schedule could shift roughly **6.0 kWh** away from less favorable grid periods and use about **10.5 kWh of solar**, corresponding to an estimated **2.1 kg CO\u2082e avoided**. These are forecast-based estimates; the plan recommends schedules but does not control your devices.",
     "tool_calls": [
       "get_personalized_tomorrow_plan"
     ],
@@ -590,30 +609,37 @@
       "get_personalized_tomorrow_plan"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 82.0,
+      "relevance": 91.0,
+      "completeness": 84.0,
+      "usefulness": 87.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The plan directly addresses all three requested saved preferences: a 07:30 EV departure, a 20.0\u201323.0\u00b0C comfort range, and a 25% battery reserve.",
+        "The schedule is clear and actionable for a Berlin household, with time windows for EV charging, flexible loads, HVAC, battery discharge, and quiet hours.",
+        "The rationale appropriately distinguishes low-cost overnight charging, daytime solar use, and avoidance of the 16:00\u201321:00 peak period. It also correctly notes that the forecast figures are estimates and that the system does not control devices.",
+        "The EV instruction is somewhat ambiguous: charging 'up to 16.0 kWh' does not establish whether the vehicle will reach the required state of charge by 07:30, nor does it explain the assumed starting battery level, charging power, or whether 00:00\u201306:00 is sufficient. It should state the target state of charge or required energy and include a contingency if charging is delayed or the starting level is lower than assumed. The phrase 'saved EV departure time' is reflected, but the answer does not explicitly say whether the departure time is a hard deadline or whether preconditioning is included before departure; the 09:00 HVAC window does not address morning preconditioning if needed before 07:30. The 16.0 kWh amount appears unsupported by information in the question, as do the 10.5 kWh solar estimate, 6.0 kWh shifted load, and 2.1 kg CO\u2082e figure. The answer should identify these as forecast/model assumptions and ideally provide expected cost savings or tariff assumptions. Battery operation lacks a starting state-of-charge, battery capacity, discharge limit, and a clear instruction for when to stop discharging to preserve the 25% reserve. The date and weekday should be verified rather than asserted without context. Overall, it is a strong practical plan, but its numerical precision exceeds the evidence shown and some device-specific feasibility details are missing."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "get_personalized_tomorrow_plan"
-      ],
       "tool_appropriateness": 100.0,
       "tool_completeness": 100.0,
       "feedback": [
-        "The expected tools were used without extras."
-      ]
+        "The personalized tomorrow plan is exactly the expected tool and is semantically appropriate for combining the user's saved EV departure time, comfort range, and battery reserve with forecast and pricing data.",
+        "The trace explicitly includes the 07:30 EV departure time, 20.0\u201323.0\u00b0C comfort range, and 25% battery reserve, along with actionable scheduling recommendations.",
+        "No additional tool calls are required; the combined plan supplies the necessary evidence."
+      ],
+      "actual_tools": [
+        "get_personalized_tomorrow_plan"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:16:03.705288"
+    "timestamp": "2026-08-12T09:44:34.051321"
   },
   {
     "test_id": "carbon_impact",
     "question": "What is the estimated CO2e impact of shifting 4 kWh of flexible use to 3 kWh of solar energy?",
-    "final_response": "**Estimated impact: 1.05 kg CO\u2082e avoided.**\n\nAssuming the 3 kWh of solar replaces grid electricity at an emissions intensity of **350 g CO\u2082e/kWh**:\n\n- Flexible use shifted: **4 kWh**\n- Solar energy used: **3 kWh**\n- Grid electricity avoided: **3 kWh**\n- Estimated avoided emissions: **3 \u00d7 350 g = 1,050 g = 1.05 kg CO\u2082e**\n\nThe remaining **1 kWh** of shifted use would need to come from the grid or another source, so it is not included in the solar-related emissions reduction.",
+    "final_response": "**Estimated impact: 1.05 kg CO\u2082e avoided.**\n\nThis assumes the **3 kWh generated by solar replaces grid electricity** at an estimated grid intensity of **350 g CO\u2082e/kWh**:\n\n`3 kWh \u00d7 350 g/kWh = 1,050 g = 1.05 kg CO\u2082e`\n\nThe remaining 1 kWh of flexible use is assumed to remain grid-supplied.",
     "tool_calls": [
       "calculate_carbon_impact"
     ],
@@ -627,24 +653,30 @@
       "calculate_carbon_impact"
     ],
     "response_evaluation": {
-      "accuracy": 100.0,
-      "relevance": 100.0,
-      "completeness": 100.0,
-      "usefulness": 100.0,
+      "accuracy": 88.0,
+      "relevance": 96.0,
+      "completeness": 82.0,
+      "usefulness": 86.0,
       "feedback": [
-        "Clear, specific response with the expected ideas."
-      ]
+        "The calculation is correct under the explicitly stated assumption: 3 kWh \u00d7 350 g CO\u2082e/kWh = 1.05 kg CO\u2082e avoided, while the remaining 1 kWh is grid-supplied.",
+        "It directly answers the question and appropriately labels the result as an estimate rather than a guarantee.",
+        "The grid-avoidance assumption is clearly explained, but the answer should clarify whether 350 g CO\u2082e/kWh is a Berlin/German average, a marginal grid-emissions factor, and which time period it represents. Solar output and grid intensity vary by hour and season, so actual avoided emissions may differ.",
+        "It does not discuss whether the 4 kWh of flexible demand can actually be shifted into the 3 kWh solar-production window, nor whether the solar is additional generation or would have been exported anyway. These affect the real avoided impact, especially for a Berlin household using a time-varying or marginal emissions factor rather than an annual average mix factor."
+      ],
+      "evaluation_method": "llm_as_judge"
     },
     "tool_evaluation": {
-      "actual_tools": [
-        "calculate_carbon_impact"
-      ],
       "tool_appropriateness": 100.0,
       "tool_completeness": 100.0,
       "feedback": [
-        "The expected tools were used without extras."
-      ]
+        "The calculate_carbon_impact tool is exactly the appropriate route for estimating CO2e from shifting flexible use to solar energy.",
+        "The output provides all required evidence: 3 kWh of grid energy avoided, a grid intensity of 350 g CO2e/kWh, and an estimated impact of 1.05 kg CO2e avoided. No additional tools are needed."
+      ],
+      "actual_tools": [
+        "calculate_carbon_impact"
+      ],
+      "evaluation_method": "llm_as_judge"
     },
-    "timestamp": "2026-08-12T02:16:08.325857"
+    "timestamp": "2026-08-12T09:44:47.785299"
   }
 ]

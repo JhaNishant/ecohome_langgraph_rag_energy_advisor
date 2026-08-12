@@ -36,11 +36,15 @@ def test_database_setup_and_exclusive_date_range(tmp_path):
 
 def test_electricity_prices_are_berlin_euro_time_of_use():
     result = tools.get_electricity_prices.invoke({"date": "2026-08-12"})
+    other_day = tools.get_electricity_prices.invoke({"date": "2026-12-12"})
     assert result["currency"] == "EUR"
     assert result["timezone"] == "Europe/Berlin"
     assert len(result["hourly_rates"]) == 24
     assert result["hourly_rates"][0]["period"] == "off_peak"
     assert result["hourly_rates"][18]["period"] == "peak"
+    assert result["pricing_type"] == "deterministic_date_aware_time_of_use"
+    assert result["hourly_rates"] != other_day["hourly_rates"]
+    assert result == tools.get_electricity_prices.invoke({"date": "2026-08-12"})
 
 
 def test_live_weather_response_is_normalized(monkeypatch):
@@ -190,3 +194,13 @@ def test_agent_contract_and_tool_list():
         "get_personalized_tomorrow_plan",
         "calculate_carbon_impact",
     }.issubset(agent.get_agent_tools())
+
+
+def test_evaluation_notebook_uses_structured_llm_judges():
+    notebook_source = (PROJECT_ROOT / "03_run_and_evaluate.ipynb").read_text(encoding="utf-8")
+    assert "with_structured_output(schema)" in notebook_source
+    assert "'evaluation_method': 'llm_as_judge'" in notebook_source
+    assert "Judge the answer semantically, not by keyword overlap" in notebook_source
+    assert "Judge the tool use semantically, not with set intersection" in notebook_source
+    assert "'weaknesses': narrative['weaknesses']" in notebook_source
+    assert "Metric breakdown" in notebook_source

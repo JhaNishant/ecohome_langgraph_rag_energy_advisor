@@ -1,33 +1,42 @@
 {
   "tests_completed": 12,
-  "overall_score": 91.8,
-  "response_score": 97.0,
-  "tool_score": 82.2,
+  "overall_score": 91.0,
+  "response_score": 87.3,
+  "tool_score": 98.0,
   "average_scores": {
-    "accuracy": 97.2,
-    "relevance": 96.1,
-    "completeness": 94.5,
-    "usefulness": 100.0,
-    "tool_appropriateness": 81.2,
-    "tool_completeness": 83.3
+    "accuracy": 84.1,
+    "relevance": 92.5,
+    "completeness": 83.9,
+    "usefulness": 88.9,
+    "tool_appropriateness": 99.2,
+    "tool_completeness": 96.8
   },
   "strengths": [
-    "accuracy",
-    "relevance",
-    "completeness",
-    "usefulness",
-    "tool appropriateness",
-    "tool completeness"
+    "Tool selection was consistently strong: most tests used appropriate combined planning, pricing, weather, history, and calculation routes, with tool-appropriateness generally scoring 100.",
+    "The recommendations were usually actionable and well tailored to Berlin timing, including solar windows, peak-price avoidance, EV departure constraints, comfort limits, and battery reserves.",
+    "The strongest responses were battery, solar_history, history_reduction, thermostat_peak, and carbon_impact: they were direct, practical, and generally transparent about uncertainty.",
+    "Several answers used appropriate caveats rather than guaranteeing savings or emissions reductions, especially in dishwasher, HVAC, solar-history, and carbon-impact cases.",
+    "The project demonstrated good prioritization of flexible loads, particularly EV charging and appliances, and correctly distinguished daytime solar use from evening peak avoidance."
+  ],
+  "weaknesses": [
+    "ev_charging and personalized_plan present precise EV energy targets and schedules without establishing starting state of charge, required target state of charge, charging power, charger losses, or whether 00:00\u201306:00 is actually the lowest-cost period. The phrase \u201cup to 16 kWh\u201d is also ambiguous.",
+    "thermostat_peak does not clearly distinguish cooling from heating. A 20\u00b0C heating setting is potentially confusing for a warm, sunny afternoon, and the answer should explicitly instruct users to operate only the applicable mode.",
+    "dishwasher gives a headline saving based on an assumed 1 kWh cycle without checking dishwasher-specific historical usage. The annual estimate is therefore less personalized and potentially inaccurate.",
+    "washing_machine asserts a specific date and 09:00\u201316:00 solar/price window without establishing the current date, year, tariff applicability, rooftop-solar ownership, or whether a narrower midday window would better maximize self-consumption.",
+    "pool_pump recommends four hours and suggests deferral on rainy days without knowing the pool\u2019s required filtration runtime, pump characteristics, sanitation needs, or whether continuous operation is required. The 16:00\u201320:00 peak-price claim is also not independently evidenced in the response.",
+    "solar_maximization assumes the household has an EV, battery, controllable water heating, HVAC, and delayed-start appliances. It should present these as conditional options and account for tariff/export-compensation arrangements before recommending battery or load-shifting behavior universally."
   ],
   "needs_review": [
     "ev_charging",
-    "thermostat_peak",
     "dishwasher",
-    "washing_machine",
-    "pool_pump",
-    "solar_maximization"
+    "pool_pump"
   ],
   "recommendations": [
-    "Keep monitoring live weather and tariff assumptions as external data changes."
-  ]
+    "For ev_charging and personalized_plan, add a charging-feasibility calculation using starting state of charge, target state of charge, usable battery capacity, charger power, charging losses, and departure preconditioning. Report the required grid energy and confirm whether the available window is sufficient; otherwise provide a contingency start time or minimum charging power.",
+    "For ev_charging, dishwasher, washing_machine, pool_pump, and solar_maximization, expose or summarize the actual hourly tariff values, tariff type, applicable household plan, and any fixed or grid charges. Do not label a period \u201coff-peak\u201d or \u201ccheapest\u201d unless the evidence establishes that comparison.",
+    "For dishwasher, replace the generic 1 kWh assumption with dishwasher-level history from query_energy_usage. If unavailable, provide a range based on observed or manufacturer cycle consumption and clearly separate measured usage from assumed usage.",
+    "For thermostat_peak, explicitly identify cooling as the relevant mode under the warm forecast, recommend pre-cooling only when needed, and state that heating and cooling should not run simultaneously. Preserve the existing comfort and heat-pump safety caveats.",
+    "For washing_machine and pool_pump, verify the date and weekday from the system context and show the forecast date/source. For the pump specifically, require confirmation of minimum daily runtime from the manual, installer, or pool controller before recommending a four-hour schedule or rain-day reduction; make solar timing secondary to sanitation requirements when they conflict with it."
+  ],
+  "evaluation_method": "llm_as_judge"
 }

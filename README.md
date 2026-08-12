@@ -7,7 +7,7 @@ EcoHome is a Berlin focused smart home energy advisor. It combines live weather 
 The advisor can:
 
 * Check live weather and solar radiation through Open Meteo.
-* Compare Berlin time of use electricity prices in EUR per kWh.
+* Compare date aware Berlin time of use electricity prices in EUR per kWh.
 * Review thirty days of EV, HVAC, appliance, and solar history.
 * Search a small energy saving knowledge base and cite the source file it used.
 * Estimate savings from reducing consumption or moving a task to a cheaper hour.
@@ -75,8 +75,8 @@ Edit `data/user_preferences.json` to set an EV departure time and charge target,
 .venv/bin/python -m pytest tests -q
 ```
 
-The final notebook records each scenario, its tool calls, response scores, tool use scores, and a plain language evaluation report.
+The final notebook records each scenario, its tool calls, response scores, tool use scores, and a structured LLM as judge report. The evaluator judges answer quality and tool choices semantically, so a combined planning tool can receive credit when it provides the same evidence as several separate tools.
 
 ## Limits
 
-The electricity prices are a reproducible Berlin focused model, not a live tariff. Solar recommendations use weather radiation as an indicator and do not model the exact size, tilt, shading, or battery configuration of a real home.
+The electricity prices are a reproducible Berlin focused model, not a live tariff. They vary by selected date through seasonal, weekday, and repeatable daily market factors, while preserving clear off peak, standard, shoulder, and peak windows. Solar recommendations use weather radiation as an indicator and do not model the exact size, tilt, shading, or battery configuration of a real home.
