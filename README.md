@@ -11,7 +11,7 @@ The advisor can:
 * Review thirty days of EV, HVAC, appliance, and solar history.
 * Search a small energy saving knowledge base and cite the source file it used.
 * Estimate savings from reducing consumption or moving a task to a cheaper hour.
-* Build a personalized tomorrow plan from EV, comfort, quiet hour, battery, and solar preferences.
+* Build a personalized tomorrow plan from EV deadlines, comfort, quiet hour, battery, and solar preferences.
 * Estimate avoided grid energy and CO₂e using a clear, editable assumption.
 
 The system gives recommendations only. It does not control household devices.
@@ -48,7 +48,7 @@ cp .env.example .env
 
 Verified local environment: Python 3.14.6, `langgraph==1.2.11`, `langchain-openai==1.4.3`, `langchain-chroma==1.1.0`, `chromadb==1.5.9`, `openai==2.54.0`, `pandas==2.3.3`, `matplotlib==3.11.1`, `SQLAlchemy==2.0.52`, and `requests==2.34.2`. The compatible version ranges are listed in `requirements.txt`.
 
-Add your Vocareum key to `.env` before running the RAG and agent notebooks. The default advisor model is `gpt-5.6-luna`, with `medium` reasoning effort. The knowledge base uses `text-embedding-3-large`, OpenAI's most capable embedding model. The weather tool uses Open Meteo and does not need a weather API key.
+Add your Vocareum key to `.env` before running the RAG and agent notebooks. The default advisor model is `gpt-5.6-luna`, with `medium` reasoning effort. The knowledge base uses `text-embedding-3-large`. The weather tool uses Open Meteo and does not need a weather API key.
 
 Run the notebooks in order:
 
@@ -65,7 +65,7 @@ Weather data comes from [Open Meteo](https://open-meteo.com/en/docs). If the ser
 
 ## Personalization and insight reporting
 
-Edit `data/user_preferences.json` to set an EV departure time and charge target, a comfort band, quiet hours, a battery reserve, and energy priorities. Those preferences become part of the advisor context and power the personalized tomorrow plan.
+Edit `data/user_preferences.json` to set an EV departure time and charge target, a comfort band, quiet hours, a battery reserve, and energy priorities. The plan always respects the departure deadline: it uses solar before that deadline when possible, otherwise the cheapest earlier grid period.
 
 `04_energy_insights.ipynb` saves four charts under `data/reports/`. Each chart explains how to read it and what decision it supports. The knowledge search also combines semantic similarity with direct keyword matching before it ranks energy tips. Carbon figures are labelled estimates and use a configurable 350 g CO₂e per kWh grid factor; they are not a live emissions feed.
 

@@ -83,6 +83,10 @@ def test_weather_fallback_is_clear(monkeypatch):
     assert len(result["hourly"]) == 24
 
 
+def test_missing_weather_code_is_not_reported_as_clear_sky():
+    assert tools._weather_condition(None) == "unknown"
+
+
 def test_savings_supports_price_shifting():
     result = tools.calculate_energy_savings.invoke(
         {"device_type": "dishwasher", "current_usage_kwh": 1.4, "optimized_usage_kwh": 1.4, "price_per_kwh": 0.46, "optimized_price_per_kwh": 0.24}
@@ -117,7 +121,43 @@ def test_personalized_plan_respects_preferences_and_explains_its_inputs():
     assert plan["confidence"] == "high"
     assert len(plan["plan"]) == 4
     assert plan["plan"][0]["device"] == "EV charger"
+    assert plan["plan"][0]["window"] == "00:00–06:00"
+    assert "departure deadline" in plan["plan"][0]["why"]
     assert plan["estimated_impact"]["carbon"]["estimated_avoided_kg_co2e"] > 0
+
+
+def test_personalized_plan_uses_solar_before_a_late_ev_departure():
+    tomorrow = (tools.datetime.now(tools.BERLIN_TIMEZONE).date() + tools.timedelta(days=1)).isoformat()
+    weather = {
+        "data_source": "Open Meteo",
+        "fallback": False,
+        "hourly": [
+            {"time": f"{tomorrow}T10:00", "hour": 10, "solar_irradiance_w_m2": 420},
+            {"time": f"{tomorrow}T11:00", "hour": 11, "solar_irradiance_w_m2": 610},
+            {"time": f"{tomorrow}T12:00", "hour": 12, "solar_irradiance_w_m2": 700},
+        ],
+    }
+    preferences = load_user_preferences()
+    preferences["ev"]["departure_time"] = "18:00"
+    plan = tools.build_tomorrow_plan(weather, tools.get_electricity_prices.invoke({"date": tomorrow}), preferences)
+    assert plan["plan"][0]["window"] == "10:00–13:00"
+    assert "rooftop solar" in plan["plan"][0]["why"]
+
+
+def test_flexible_plan_excludes_peak_price_solar_hours():
+    tomorrow = (tools.datetime.now(tools.BERLIN_TIMEZONE).date() + tools.timedelta(days=1)).isoformat()
+    weather = {
+        "data_source": "Open Meteo",
+        "fallback": False,
+        "hourly": [
+            {"time": f"{tomorrow}T15:00", "hour": 15, "solar_irradiance_w_m2": 500},
+            {"time": f"{tomorrow}T16:00", "hour": 16, "solar_irradiance_w_m2": 500},
+            {"time": f"{tomorrow}T17:00", "hour": 17, "solar_irradiance_w_m2": 450},
+        ],
+    }
+    plan = tools.build_tomorrow_plan(weather, tools.get_electricity_prices.invoke({"date": tomorrow}), load_user_preferences())
+    assert plan["data_inputs"]["forecast_solar_window"] == "15:00–18:00"
+    assert plan["data_inputs"]["recommended_flexible_load_window"] == "15:00–16:00"
 
 
 def test_all_seven_energy_documents_are_available():

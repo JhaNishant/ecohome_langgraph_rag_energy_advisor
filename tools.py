@@ -65,7 +65,7 @@ def _parse_date(value: str) -> datetime:
 
 
 def _weather_condition(code: int | None) -> str:
-    return WEATHER_CODES.get(code or 0, "unknown")
+    return WEATHER_CODES.get(code, "unknown")
 
 
 @lru_cache(maxsize=32)
@@ -346,7 +346,33 @@ def get_user_preferences() -> dict[str, Any]:
 def _hours_to_window(hours: list[int]) -> str:
     if not hours:
         return "No suitable window"
-    return f"{min(hours):02d}:00–{max(hours) + 1:02d}:00"
+    sorted_hours = sorted(set(hours))
+    best_window = [sorted_hours[0]]
+    current_window = [sorted_hours[0]]
+    for hour in sorted_hours[1:]:
+        if hour == current_window[-1] + 1:
+            current_window.append(hour)
+        else:
+            if len(current_window) > len(best_window):
+                best_window = current_window
+            current_window = [hour]
+    if len(current_window) > len(best_window):
+        best_window = current_window
+    return f"{best_window[0]:02d}:00–{best_window[-1] + 1:02d}:00"
+
+
+def _hours_ending_before(hours: list[int], deadline: str) -> list[int]:
+    deadline_time = datetime.strptime(deadline, "%H:%M")
+    deadline_minutes = (deadline_time.hour * 60) + deadline_time.minute
+    return [hour for hour in hours if (hour + 1) * 60 <= deadline_minutes]
+
+
+def _is_quiet_hour(hour: int, quiet_hours: list[str]) -> bool:
+    start = datetime.strptime(quiet_hours[0], "%H:%M").hour
+    end = datetime.strptime(quiet_hours[1], "%H:%M").hour
+    if start < end:
+        return start <= hour < end
+    return hour >= start or hour < end
 
 
 def build_tomorrow_plan(
@@ -374,10 +400,30 @@ def build_tomorrow_plan(
     comfort = preferences["comfort"]
     battery = preferences["battery"]
     priorities = preferences["priorities"]
-    solar_first = bool(priorities.get("maximize_solar")) and bool(ev.get("allow_midday_charging")) and bool(solar_hours)
-    ev_window = solar_window if solar_first else off_peak_window
-    ev_reason = "uses forecast rooftop solar" if solar_first else "uses the cheapest grid period before departure"
-    estimated_solar_kwh = round(min(float(ev["target_charge_kwh"]), max(0, len(solar_hours) * 1.5)), 1)
+    departure_time = str(ev["departure_time"])
+    flexible_solar_hours = [
+        hour
+        for hour in solar_hours
+        if hour not in peak_hours and not _is_quiet_hour(hour, comfort["quiet_hours"])
+    ]
+    flexible_solar_window = _hours_to_window(flexible_solar_hours)
+    solar_before_departure = _hours_ending_before(solar_hours, departure_time)
+    off_peak_before_departure = _hours_ending_before(off_peak_hours, departure_time)
+    solar_first = (
+        bool(priorities.get("maximize_solar"))
+        and bool(ev.get("allow_midday_charging"))
+        and bool(solar_before_departure)
+    )
+    ev_window = _hours_to_window(solar_before_departure if solar_first else off_peak_before_departure)
+    if ev_window == "No suitable window":
+        ev_reason = "No full hourly charging window is available before the departure deadline"
+    else:
+        ev_reason = (
+            "uses forecast rooftop solar before the departure deadline"
+            if solar_first
+            else "uses the cheapest available grid period before the departure deadline"
+        )
+    estimated_solar_kwh = round(min(float(ev["target_charge_kwh"]), max(0, len(flexible_solar_hours) * 1.5)), 1)
     shifted_kwh = round(min(float(ev["target_charge_kwh"]), 6.0), 1)
     carbon = calculate_carbon_impact.invoke(
         {"shifted_energy_kwh": shifted_kwh, "solar_energy_kwh": estimated_solar_kwh}
@@ -393,10 +439,12 @@ def build_tomorrow_plan(
         "confidence": confidence,
         "data_inputs": {
             "weather_source": source,
-            "solar_window": solar_window,
+            "forecast_solar_window": solar_window,
+            "recommended_flexible_load_window": flexible_solar_window,
             "off_peak_window": off_peak_window,
             "peak_window": peak_window,
             "quiet_hours": comfort["quiet_hours"],
+            "ev_departure_time": ev["departure_time"],
         },
         "plan": [
             {
@@ -407,13 +455,13 @@ def build_tomorrow_plan(
             },
             {
                 "device": "Flexible appliances",
-                "window": solar_window,
+                "window": flexible_solar_window,
                 "action": "Run dishwasher, washing, or water heating during this window",
                 "why": "matches the strongest forecast solar period while staying outside quiet hours",
             },
             {
                 "device": "HVAC",
-                "window": solar_window,
+                "window": flexible_solar_window,
                 "action": f"Preheat or precool within {comfort['minimum_temperature_c']}–{comfort['maximum_temperature_c']}°C",
                 "why": "uses lower cost daytime energy without giving up comfort",
             },
@@ -426,12 +474,13 @@ def build_tomorrow_plan(
         ],
         "estimated_impact": {
             "shifted_energy_kwh": shifted_kwh,
-            "estimated_solar_energy_kwh": estimated_solar_kwh,
+            "estimated_flexible_load_solar_kwh": estimated_solar_kwh,
             "carbon": carbon,
         },
         "assumptions": [
             "Solar energy is estimated from forecast radiation, not a site specific panel model.",
             "Carbon impact uses a transparent 350 g CO2e per kWh grid estimate.",
+            "An EV is scheduled before its saved departure time, even when later solar would be stronger.",
             "The plan recommends schedules only and does not operate devices.",
         ],
     }

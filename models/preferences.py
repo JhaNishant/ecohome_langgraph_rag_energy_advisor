@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,14 +27,29 @@ def load_user_preferences(path: str | Path = PREFERENCES_PATH) -> dict[str, Any]
     """Load the sample profile while keeping sensible defaults for missing values."""
     preference_path = Path(path)
     if not preference_path.exists():
-        return DEFAULT_PREFERENCES.copy()
+        return deepcopy(DEFAULT_PREFERENCES)
     with preference_path.open(encoding="utf-8") as handle:
         saved = json.load(handle)
 
-    merged = DEFAULT_PREFERENCES.copy()
+    merged = deepcopy(DEFAULT_PREFERENCES)
     for section, value in saved.items():
         if isinstance(value, dict) and isinstance(merged.get(section), dict):
             merged[section] = {**merged[section], **value}
         else:
             merged[section] = value
+    try:
+        datetime.strptime(str(merged["ev"]["departure_time"]), "%H:%M")
+        if float(merged["ev"]["target_charge_kwh"]) < 0:
+            raise ValueError("EV target charge must be zero or greater")
+        if float(merged["comfort"]["minimum_temperature_c"]) > float(merged["comfort"]["maximum_temperature_c"]):
+            raise ValueError("minimum comfort temperature cannot exceed the maximum")
+        if not 0 <= int(merged["battery"]["reserve_percent"]) <= 100:
+            raise ValueError("battery reserve must be between 0 and 100")
+        quiet_hours = merged["comfort"]["quiet_hours"]
+        if not isinstance(quiet_hours, list) or len(quiet_hours) != 2:
+            raise ValueError("quiet_hours must contain a start and end time")
+        for value in quiet_hours:
+            datetime.strptime(str(value), "%H:%M")
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"Invalid user preferences: {exc}") from exc
     return merged
