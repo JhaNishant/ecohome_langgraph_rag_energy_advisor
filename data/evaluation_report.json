@@ -1,30 +1,31 @@
 {
   "tests_completed": 12,
-  "overall_score": 88.1,
-  "response_score": 92.3,
-  "tool_score": 80.2,
+  "overall_score": 91.8,
+  "response_score": 97.0,
+  "tool_score": 82.2,
   "average_scores": {
-    "accuracy": 93.0,
-    "relevance": 90.3,
-    "completeness": 86.1,
+    "accuracy": 97.2,
+    "relevance": 96.1,
+    "completeness": 94.5,
     "usefulness": 100.0,
-    "tool_appropriateness": 75.7,
-    "tool_completeness": 84.7
+    "tool_appropriateness": 81.2,
+    "tool_completeness": 83.3
   },
   "strengths": [
     "accuracy",
     "relevance",
     "completeness",
     "usefulness",
+    "tool appropriateness",
     "tool completeness"
   ],
   "needs_review": [
     "ev_charging",
+    "thermostat_peak",
     "dishwasher",
     "washing_machine",
-    "solar_maximization",
-    "hvac_history",
-    "carbon_impact"
+    "pool_pump",
+    "solar_maximization"
   ],
   "recommendations": [
     "Keep monitoring live weather and tariff assumptions as external data changes."
